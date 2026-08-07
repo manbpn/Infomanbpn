@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<title>Ruang Infografis — MAN Balikpapan (Layar TV)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --emerald-950:#0A2620;
+    --emerald-900:#0D3229;
+    --emerald-800:#124A3B;
+    --emerald-700:#186552;
+    --emerald-600:#1F8267;
+    --gold-500:#C9A227;
+    --gold-400:#DDBE55;
+    --gold-200:#F0DFA0;
+    --paper:#F2F4EE;
+    --paper-card:#FFFFFF;
+    --ink:#12211C;
+    --ink-soft:#4A5C55;
+    --line:#DCE3D9;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;
+    width:100%;height:100%;
+    overflow:hidden;           /* papan TV: tidak ada scroll */
+  }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    width:100vw;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- HEADER (proporsi tetap terhadap tinggi layar) ---------- */
+  header.board-header{
+    position:relative;
+    flex:0 0 auto;
+    height:15vh;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(201,162,39,0.10), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(201,162,39,0.08), transparent 45%),
+      linear-gradient(160deg, var(--emerald-950), var(--emerald-800));
+    color:#fff;
+    padding:0 2.2vw;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    border-bottom:0.35vh solid var(--gold-500);
+  }
+  header.board-header::before{
+    content:"";
+    position:absolute; inset:0; opacity:0.10;
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 18px, rgba(255,255,255,0.5) 18px 19px),
+      repeating-linear-gradient(-45deg, transparent 0 18px, rgba(255,255,255,0.5) 18px 19px);
+    background-size:40px 40px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    pointer-events:none;
+  }
+
+  .header-grid{
+    position:relative;
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:1.4vw;
+  }
+
+  .brand{ display:flex; align-items:center; gap:1vw; }
+  .brand-emblem{
+    width:6.2vh;height:6.2vh;flex:none;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-200), var(--gold-500) 60%, #8a6d16 100%);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35), 0 4px 12px rgba(0,0,0,0.35);
+  }
+  .brand-emblem svg{width:60%;height:60%;}
+  .brand-text{line-height:1.2;}
+  .brand-text .brand-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:1.9vh; }
+  .brand-text .brand-sub{ font-size:1.3vh; color:var(--gold-200); font-weight:500; margin-top:0.3vh; }
+
+  .title-block{text-align:center;}
+  .title-block .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:1.2vh; letter-spacing:0.4vh; color:var(--gold-400); text-transform:uppercase; }
+  .title-block h1{ font-family:'Sora', sans-serif; font-weight:800; font-size:4.4vh; letter-spacing:0.15vh; margin:0.3vh 0 0.6vh; }
+  .title-rule{ width:9vw; height:0.22vh; margin:0 auto 0.7vh; background:linear-gradient(90deg, transparent, var(--gold-500), transparent); }
+  .title-block .agenda-line{ font-size:1.9vh; color:var(--gold-200); font-weight:600; letter-spacing:0.03vh; }
+
+  .clock-wrap{ display:flex; flex-direction:column; align-items:flex-end; text-align:right; }
+  .clock-time{
+    font-family:'JetBrains Mono', monospace; font-weight:700; font-size:4.2vh;
+    color:var(--gold-200); letter-spacing:0.15vh;
+    text-shadow:0 0 14px rgba(221,190,85,0.35);
+    font-variant-numeric:tabular-nums;
+  }
+  .clock-time .colon{ animation: blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0.25; } }
+  .clock-date{ font-family:'JetBrains Mono', monospace; font-size:1.5vh; color:rgba(255,255,255,0.75); margin-top:0.3vh; text-transform:capitalize; }
+
+  /* ---------- MAIN / BILIK GRID (mengisi sisa tinggi layar, tanpa scroll) ---------- */
+  main{
+    flex:1 1 auto;
+    min-height:0;
+    padding:2vh 2.2vw;
+    display:flex;
+    flex-direction:column;
+  }
+  .section-intro{ flex:0 0 auto; text-align:center; margin-bottom:1.4vh; }
+  .section-intro h2{
+    font-family:'Sora', sans-serif; font-size:1.7vh; font-weight:700;
+    letter-spacing:0.35vh; text-transform:uppercase; color:var(--emerald-800); margin:0 0 0.4vh;
+  }
+  .section-intro p{ font-size:1.45vh; color:var(--ink-soft); margin:0; }
+
+  .bilik-grid{
+    flex:1 1 auto;
+    min-height:0;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-template-rows:repeat(2, 1fr);
+    gap:2vh 1.6vw;
+  }
+
+  .bilik{
+    position:relative;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-top:none;
+    border-radius:6vh 6vh 1vh 1vh;
+    padding:2.6vh 1.4vw 1.4vh;
+    box-shadow:0 1vh 2.4vh -1vh rgba(10,38,32,0.22);
+    transition:box-shadow .5s ease, transform .5s ease, border-color .5s ease;
+  }
+  .bilik::before{
+    content:"";
+    position:absolute; top:0; left:50%;
+    width:1.3vh;height:1.3vh;
+    background:var(--gold-500); border-radius:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 0 0 0.5vh var(--paper-card), 0 0 0 0.6vh var(--line);
+  }
+  .bilik::after{
+    content:"";
+    position:absolute; top:1.1vh; left:1.1vh; right:1.1vh; height:2px;
+    background:repeating-linear-gradient(90deg, var(--gold-500) 0 6px, transparent 6px 12px);
+    opacity:0.6;
+  }
+
+  /* sorotan otomatis bergilir — pengganti interaksi klik pada layar TV */
+  .bilik.active{
+    box-shadow:0 1.6vh 3.4vh -1vh rgba(201,162,39,0.35);
+    transform:translateY(-0.6vh);
+  }
+  .bilik.active::before{ box-shadow:0 0 0 0.5vh var(--paper-card), 0 0 0.8vh 0.4vh var(--gold-400); }
+
+  .badge{
+    align-self:flex-start;
+    display:inline-flex; align-items:center; gap:0.5vh;
+    font-family:'JetBrains Mono', monospace; font-size:1.15vh; font-weight:700;
+    letter-spacing:0.15vh; text-transform:uppercase;
+    padding:0.6vh 1.1vh; border-radius:999px; color:#fff;
+  }
+  .badge.gambar{ background:var(--emerald-700); }
+  .badge.video{ background:#8A3B1F; }
+  .badge.dokumen{ background:var(--emerald-900); }
+
+  .bilik h3{ font-family:'Sora', sans-serif; font-size:2vh; font-weight:700; margin:1.1vh 0 0.4vh; color:var(--ink); }
+  .bilik .fungsi{ font-size:1.4vh; color:var(--ink-soft); line-height:1.4; margin:0 0 1.2vh; }
+
+  .preview{ flex:1 1 auto; min-height:0; border:1.5px dashed var(--line); border-radius:1vh; padding:1.2vh; background:#FAFBF8; display:flex; flex-direction:column; }
+  .preview .preview-title{
+    font-weight:700; color:var(--ink); font-size:1.2vh; text-transform:uppercase; letter-spacing:0.06vh;
+    margin-bottom:0.8vh; display:flex; align-items:center; justify-content:space-between; flex:0 0 auto;
+  }
+  .preview .preview-title span.count{ font-family:'JetBrains Mono', monospace; color:var(--gold-500); font-weight:700; }
+
+  .thumb-row{ display:flex; gap:0.6vh; flex:1 1 auto; min-height:0; }
+  .thumb{ flex:1; border-radius:0.8vh; background:linear-gradient(135deg, var(--emerald-600), var(--emerald-800)); display:flex; align-items:center; justify-content:center; }
+  .thumb svg{ width:2.2vh; height:2.2vh; opacity:0.85; }
+
+  .video-box{ position:relative; flex:1 1 auto; min-height:0; border-radius:0.9vh; background:linear-gradient(135deg,#3A1A0E,#8A3B1F); display:flex; align-items:center; justify-content:center; }
+  .video-box .play{ width:4.4vh; height:4.4vh; border-radius:50%; background:rgba(255,255,255,0.92); display:flex; align-items:center; justify-content:center; }
+  .video-box .play svg{ width:1.8vh; height:1.8vh; }
+  .video-box .dur{ position:absolute; bottom:0.8vh; right:1vh; font-family:'JetBrains Mono', monospace; font-size:1.15vh; color:#fff; background:rgba(0,0,0,0.55); padding:0.2vh 0.7vh; border-radius:0.5vh; }
+
+  .doc-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.7vh; flex:1 1 auto; min-height:0; justify-content:center; }
+  .doc-list li{ display:flex; align-items:center; gap:0.8vh; font-size:1.35vh; color:var(--ink); padding:0.7vh 0.9vh; background:#fff; border:1px solid var(--line); border-radius:0.7vh; }
+  .doc-list li svg{ flex:none; width:1.6vh; height:1.6vh; color:var(--emerald-800); }
+  .doc-list li .fname{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .doc-list li .fdate{ font-family:'JetBrains Mono', monospace; font-size:1.1vh; color:var(--ink-soft); }
+
+  /* ---------- FOOTER / RUNNING TEXT ---------- */
+  footer.marquee-bar{
+    flex:0 0 auto;
+    height:5.5vh;
+    background:linear-gradient(90deg, var(--emerald-950), var(--emerald-800));
+    border-top:0.3vh solid var(--gold-500);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    white-space:nowrap;
+  }
+  .marquee-track{ display:inline-flex; animation: scroll-left 24s linear infinite; }
+  .marquee-track span{
+    display:inline-flex; align-items:center; gap:1vh; padding-right:6vw;
+    font-family:'JetBrains Mono', monospace; font-size:1.9vh; font-weight:500;
+    color:var(--gold-200); letter-spacing:0.05vh;
+  }
+  .marquee-track span::before{ content:"●"; color:var(--gold-500); font-size:0.9vh; }
+  @keyframes scroll-left{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){
+    .marquee-track{ animation:none; justify-content:center; width:100%; }
+    .marquee-track span:nth-child(2){ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="board-header">
+  <div class="header-grid">
+    <div class="brand">
+      <div class="brand-emblem" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 7v2h18V7l-9-5z" fill="#0A2620"/>
+          <rect x="4" y="10" width="16" height="9" rx="1" fill="#0A2620"/>
+          <path d="M9 19v-5h6v5" stroke="#F2F4EE" stroke-width="1" fill="none"/>
+          <circle cx="12" cy="6.4" r="1.1" fill="#F2F4EE"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">MAN Balikpapan</div>
+        <div class="brand-sub">Kota Balikpapan · Kalimantan Timur</div>
+      </div>
+    </div>
+
+    <div class="title-block">
+      <div class="eyebrow">Papan Informasi Digital</div>
+      <h1>RUANG INFOGRAFIS</h1>
+      <div class="title-rule"></div>
+      <div class="agenda-line">Agenda Madrasah Hari Ini</div>
+    </div>
+
+    <div class="clock-wrap">
+      <div class="clock-time" id="clockTime">--<span class="colon">:</span>--<span class="colon">:</span>--</div>
+      <div class="clock-date" id="clockDate">memuat tanggal…</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="section-intro">
+    <h2>Bilik Informasi</h2>
+    <p>Setiap bilik menampung satu jenis konten — ganti data contoh dengan berkas asli madrasah sesuai kebutuhan.</p>
+  </div>
+
+  <div class="bilik-grid" id="bilikGrid">
+
+    <article class="bilik" data-type="dokumen">
+      <span class="badge dokumen">Dokumen</span>
+      <h3>Bilik Pengumuman &amp; Edaran</h3>
+      <p class="fungsi">Surat edaran, pengumuman resmi, dan SK madrasah untuk siswa, guru, dan orang tua.</p>
+      <div class="preview">
+        <div class="preview-title">Berkas terbaru <span class="count">4 dok.</span></div>
+        <ul class="doc-list">
+          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Edaran_Libur_Akhir_Semester.pdf</span><span class="fdate">01 Agt</span></li>
+          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">SK_Panitia_PHBI.pdf</span><span class="fdate">28 Jul</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="bilik" data-type="dokumen">
+      <span class="badge dokumen">Dokumen</span>
+      <h3>Bilik Jadwal &amp; Agenda</h3>
+      <p class="fungsi">Jadwal pelajaran, agenda kegiatan harian, dan kalender akademik madrasah.</p>
+      <div class="preview">
+        <div class="preview-title">Agenda hari ini <span class="count">3 dok.</span></div>
+        <ul class="doc-list">
+          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Jadwal_Pelajaran_Ganjil.pdf</span><span class="fdate">Aktif</span></li>
+          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Kalender_Akademik_2026.pdf</span><span class="fdate">Aktif</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="bilik" data-type="video">
+      <span class="badge video">Video</span>
+      <h3>Bilik Video Profil &amp; Tausiyah</h3>
+      <p class="fungsi">Video profil madrasah, tausiyah singkat, dan tayangan edukatif.</p>
+      <div class="preview">
+        <div class="preview-title">Tayangan <span class="count">2 video</span></div>
+        <div class="video-box">
+          <div class="play"><svg viewBox="0 0 24 24" fill="#8A3B1F"><path d="M8 5v14l11-7z"/></svg></div>
+          <span class="dur">04:12</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="bilik" data-type="gambar">
+      <span class="badge gambar">Gambar</span>
+      <h3>Bilik Galeri Kegiatan</h3>
+      <p class="fungsi">Dokumentasi foto KBM, ekstrakurikuler, dan acara madrasah.</p>
+      <div class="preview">
+        <div class="preview-title">Foto terbaru <span class="count">18 foto</span></div>
+        <div class="thumb-row">
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg></div>
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg></div>
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="bilik" data-type="gambar">
+      <span class="badge gambar">Gambar</span>
+      <h3>Bilik Prestasi Siswa</h3>
+      <p class="fungsi">Foto piagam, piala, dan capaian siswa dalam berbagai lomba.</p>
+      <div class="preview">
+        <div class="preview-title">Prestasi terbaru <span class="count">7 foto</span></div>
+        <div class="thumb-row">
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.5 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.5 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.5 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="bilik" data-type="dokumen">
+      <span class="badge dokumen">Dokumen</span>
+      <h3>Bilik Berkas Unduhan</h3>
+      <p class="fungsi">Formulir, surat keterangan, dan berkas administrasi untuk siswa/wali.</p>
+      <div class="preview">
+        <div class="preview-title">Berkas tersedia <span class="count">6 dok.</span></div>
+        <ul class="doc-list">
+          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Formulir_Izin_Siswa.pdf</span><span class="fdate">Umum</span></li>
+          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Surat_Keterangan_Aktif.pdf</span><span class="fdate">Umum</span></li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="marquee-bar" aria-label="Alamat madrasah berjalan">
+  <div class="marquee-track">
+    <span>Alamat Madrasah : Jalan Prapatan RT 26 No 10 Balikpapan Kota.</span>
+    <span>Alamat Madrasah : Jalan Prapatan RT 26 No 10 Balikpapan Kota.</span>
+  </div>
+</footer>
+
+<script>
+  // Jam digital real-time
+  function pad(n){ return n.toString().padStart(2,'0'); }
+  function updateClock(){
+    const now = new Date();
+    document.getElementById('clockTime').innerHTML =
+      pad(now.getHours()) + '<span class="colon">:</span>' + pad(now.getMinutes()) + '<span class="colon">:</span>' + pad(now.getSeconds());
+    document.getElementById('clockDate').textContent =
+      now.toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Sorotan otomatis bergilir antar bilik (pengganti interaksi klik untuk layar TV)
+  const cards = document.querySelectorAll('.bilik');
+  let idx = 0;
+  function cycleSpotlight(){
+    cards.forEach(c => c.classList.remove('active'));
+    if(cards.length){ cards[idx % cards.length].classList.add('active'); }
+    idx++;
+  }
+  cycleSpotlight();
+  setInterval(cycleSpotlight, 5000);
+</script>
+
+</body>
+</html>
