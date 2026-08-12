@@ -148,6 +148,9 @@
 
   <!-- TAB: KONTEN -->
   <div class="panel active" id="panelKonten">
+    <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--ink-soft);">
+      <b>Urutan (order) menentukan posisi di layar TV:</b> bilik pertama = Slide besar, bilik ke-2 s.d. ke-6 = 5 kotak navigasi kecil, bilik ke-7 = panel Informasi, bilik ke-8 = panel Reward Siswa.
+    </div>
     <div id="bilikList"></div>
   </div>
 
@@ -243,13 +246,17 @@
   });
 
   /* ---------------- KELOLA KONTEN BILIK ---------------- */
+  /* Urutan (order) menentukan posisi tampil di layar:
+     1 = Slide utama (area besar) | 2-6 = 5 kotak navigasi kecil | 7 = panel Informasi | 8 = panel Reward Siswa */
   const DEFAULT_BILIKS = [
-    { name:'Bilik Pengumuman & Edaran', fungsi:'Surat edaran, pengumuman resmi, dan SK madrasah.', type:'dokumen', order:1 },
-    { name:'Bilik Jadwal & Agenda', fungsi:'Jadwal pelajaran, agenda kegiatan, kalender akademik.', type:'dokumen', order:2 },
-    { name:'Bilik Video Profil & Tausiyah', fungsi:'Video profil madrasah, tausiyah, dan tayangan edukatif.', type:'video', order:3 },
-    { name:'Bilik Galeri Kegiatan', fungsi:'Dokumentasi foto KBM, ekstrakurikuler, dan acara madrasah.', type:'gambar', order:4 },
-    { name:'Bilik Prestasi Siswa', fungsi:'Foto piagam, piala, dan capaian siswa.', type:'gambar', order:5 },
-    { name:'Bilik Berkas Unduhan', fungsi:'Formulir dan berkas administrasi untuk siswa/wali.', type:'dokumen', order:6 }
+    { name:'Slide', fungsi:'Slide utama: foto, video, atau PDF unggulan yang tampil besar.', type:'gambar', order:1 },
+    { name:'Ekskul Slide', fungsi:'Dokumentasi kegiatan ekstrakurikuler.', type:'gambar', order:2 },
+    { name:'Visi & Misi', fungsi:'Visi dan misi madrasah.', type:'gambar', order:3 },
+    { name:'SARPRAS', fungsi:'Sarana dan prasarana madrasah.', type:'gambar', order:4 },
+    { name:'Kampus 1', fungsi:'Dokumentasi lingkungan Kampus 1.', type:'gambar', order:5 },
+    { name:'Kampus 2', fungsi:'Dokumentasi lingkungan Kampus 2.', type:'gambar', order:6 },
+    { name:'Informasi', fungsi:'Pengumuman dan informasi umum (foto, PDF).', type:'dokumen', order:7 },
+    { name:'Reward Siswa', fungsi:'Foto penghargaan dan prestasi siswa.', type:'gambar', order:8 }
   ];
 
   async function loadBiliks(){
@@ -257,7 +264,7 @@
     onSnapshot(q, (snap) => {
       const list = $('#bilikList');
       if(snap.empty){
-        list.innerHTML = '<div class="empty-state">Belum ada data bilik.<br><br><button class="btn-small" id="btnSeed">Buat 6 Bilik Contoh</button></div>';
+        list.innerHTML = '<div class="empty-state">Belum ada data bilik.<br><br><button class="btn-small" id="btnSeed">Buat 8 Bilik Contoh</button></div>';
         const seedBtn = document.getElementById('btnSeed');
         if(seedBtn) seedBtn.addEventListener('click', seedBiliks);
         return;
