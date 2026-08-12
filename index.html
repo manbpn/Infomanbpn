@@ -107,15 +107,18 @@
   .hero-panel .caption .doc-icon-badge{
     display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.14); padding:4px 10px; border-radius:999px; font-size:11px; margin-bottom:4px;
   }
-  .hero-doc-card{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:10px; color:var(--ink); }
-  .hero-doc-card svg{ width:56px; height:56px; color:var(--emerald-700); }
+  .hero-panel .caption, .side-panel .panel-caption{
+    overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; white-space:normal;
+  }
 
   /* Thumbnail strip */
   .thumb-strip{
     grid-column:1; grid-row:2; height:var(--bottom-row-h);
     display:flex; gap:clamp(8px,1vw,12px); padding:8px; border-radius:14px;
     background:linear-gradient(90deg, var(--gold-500), var(--gold-400));
+    overflow-x:auto;
   }
+  .thumb-card{ flex:1 0 clamp(120px,14vw,180px); min-width:clamp(120px,14vw,180px); }
   .thumb-card{
     flex:1; min-width:0; position:relative; border-radius:10px; overflow:hidden;
     background:linear-gradient(135deg, var(--emerald-600), var(--emerald-900));
@@ -175,7 +178,6 @@
     flex:0 0 auto; background:linear-gradient(90deg, var(--emerald-950), var(--emerald-800));
     border-top:3px solid var(--gold-500); overflow:hidden; padding:6px 0 9px;
   }
-  .marquee-caption{ text-align:center; font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:2px; text-transform:uppercase; color:var(--gold-400); margin-bottom:3px; }
   .marquee-track{ display:inline-flex; white-space:nowrap; animation: scroll-left 24s linear infinite; }
   .marquee-track span{ display:inline-flex; align-items:center; gap:10px; padding-right:60px; font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:500; color:var(--gold-200); letter-spacing:0.4px; }
   .marquee-track span::before{ content:"●"; color:var(--gold-500); font-size:8px; }
@@ -258,10 +260,9 @@
 </main>
 
 <footer class="marquee-bar" aria-label="Alamat madrasah berjalan">
-  <div class="marquee-caption">Running Text</div>
   <div class="marquee-track">
-    <span>Alamat Madrasah : Jalan Prapatan RT 26 No 10 Balikpapan Kota.</span>
-    <span>Alamat Madrasah : Jalan Prapatan RT 26 No 10 Balikpapan Kota.</span>
+    <span>Kampus 1 : Jalan Prapatan RT 26 No 10 Balikpapan Kota &nbsp;•&nbsp; Kampus 2 : Jl. Padat Karya Km 8,5 Balikpapan.</span>
+    <span>Kampus 1 : Jalan Prapatan RT 26 No 10 Balikpapan Kota &nbsp;•&nbsp; Kampus 2 : Jl. Padat Karya Km 8,5 Balikpapan.</span>
   </div>
 </footer>
 
@@ -333,21 +334,23 @@
     }else{ bgAudio.pause(); btnSound.lastChild.textContent = ' Aktifkan Backsound'; }
   });
 
-  /* ---------- Deteksi jenis media dari URL ---------- */
+  /* ---------- Deteksi jenis konten: Foto, Video, atau HTML ---------- */
   function isYouTube(url){ return /youtube\.com|youtu\.be/.test(url||''); }
   function toYouTubeEmbed(url){ const m=url.match(/(?:v=|youtu\.be\/)([\w-]{6,})/); return m?'https://www.youtube.com/embed/'+m[1]+'?autoplay=0&mute=1':url; }
   function isImage(url){ return /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(url||''); }
   function isVideoFile(url){ return /\.(mp4|webm|mov)(\?|$)/i.test(url||''); }
-  const docIconSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg>';
+  function isRawHtml(str){ return /^\s*</.test(str||''); }
 
+  /* Merender item sebagai Foto, Video, atau HTML (halaman web / kode HTML) */
   function mediaHtml(item){
     if(!item || !item.url) return '';
-    if(isImage(item.url)) return '<img src="'+item.url+'" alt="'+(item.title||'')+'">';
-    if(isYouTube(item.url)) return '<iframe src="'+toYouTubeEmbed(item.url)+'" allowfullscreen loading="lazy"></iframe>';
-    if(isVideoFile(item.url)) return '<video src="'+item.url+'" muted loop autoplay playsinline></video>';
-    return ''; // dokumen -> ditangani terpisah (kartu dokumen)
+    const v = item.url;
+    if(isImage(v)) return '<img src="'+v+'" alt="'+(item.title||'')+'">';
+    if(isYouTube(v)) return '<iframe src="'+toYouTubeEmbed(v)+'" allowfullscreen loading="lazy"></iframe>';
+    if(isVideoFile(v)) return '<video src="'+v+'" muted loop autoplay playsinline></video>';
+    if(isRawHtml(v)) return '<iframe srcdoc="'+v.replace(/"/g,'&quot;')+'" loading="lazy"></iframe>'; // kode HTML langsung
+    return '<iframe src="'+v+'" loading="lazy"></iframe>'; // tautan halaman web / embed lain
   }
-  function isDocItem(item){ return item && item.url && !isImage(item.url) && !isYouTube(item.url) && !isVideoFile(item.url); }
 
   /* ---------- Panel cycling (Hero, Informasi, Reward) ---------- */
   function setupCyclingPanel(panelEl, bilikGetter, opts){
@@ -360,13 +363,7 @@
       }
       const item = st.items[idx % st.items.length];
       idx++;
-      if(isDocItem(item)){
-        panelEl.innerHTML =
-          '<div class="hero-doc-card">'+docIconSvg+'<div style="font-weight:700;max-width:80%;">'+(item.title||'Dokumen')+'</div></div>' +
-          opts.captionHtml(st.data, item);
-      }else{
-        panelEl.innerHTML = mediaHtml(item) + opts.captionHtml(st.data, item);
-      }
+      panelEl.innerHTML = mediaHtml(item) + opts.captionHtml(st.data, item);
     }
     render();
     setInterval(render, opts.interval || 7000);
@@ -375,21 +372,23 @@
   const bilikState = {}; // id -> {data, items}
   let orderedIds = [];
 
+  /* Bilik pertama = Slide (hero). Dua bilik TERAKHIR = Informasi & Reward Siswa.
+     Sisanya di tengah (jumlah bebas) = kotak navigasi kecil (Kampus 1/2/3, dst). */
   function heroState(){ const id = orderedIds[0]; return id ? bilikState[id] : null; }
-  function infoState(){ const id = orderedIds[6]; return id ? bilikState[id] : null; }
-  function rewardState(){ const id = orderedIds[7]; return id ? bilikState[id] : null; }
+  function infoState(){ const id = orderedIds[orderedIds.length-2]; return id ? bilikState[id] : null; }
+  function rewardState(){ const id = orderedIds[orderedIds.length-1]; return id ? bilikState[id] : null; }
 
   let panelsInitialized = false;
   function initPanelsOnce(){
     if(panelsInitialized) return; panelsInitialized = true;
     setupCyclingPanel(document.getElementById('heroPanel'), heroState, {
       interval: 8000,
-      emptyHtml: (data) => '<div class="empty-msg"><div class="big">'+(data?data.name:'Slide')+'</div>'+(data?data.fungsi:'Foto, Video, PDF akan tampil di sini')+'</div>',
+      emptyHtml: (data) => '<div class="empty-msg"><div class="big">'+(data?data.name:'Slide')+'</div>'+(data?data.fungsi:'Foto, Video, atau HTML akan tampil di sini')+'</div>',
       captionHtml: (data, item) => '<div class="caption">'+(data.name||'')+' &middot; '+(item.title||'')+'</div>'
     });
     setupCyclingPanel(document.getElementById('infoPanel'), infoState, {
       interval: 9000,
-      emptyHtml: (data) => '<div class="panel-label">'+(data?data.name:'Informasi')+'<span class="sub">'+(data?data.fungsi:'Foto, PDF')+'</span></div>',
+      emptyHtml: (data) => '<div class="panel-label">'+(data?data.name:'Informasi')+'<span class="sub">'+(data?data.fungsi:'Foto, Video, HTML')+'</span></div>',
       captionHtml: (data, item) => '<div class="panel-caption">'+(item.title||data.name||'')+'</div>'
     });
     setupCyclingPanel(document.getElementById('rewardPanel'), rewardState, {
@@ -400,7 +399,7 @@
   }
 
   function repaintThumbs(){
-    const thumbIds = orderedIds.slice(1,6);
+    const thumbIds = orderedIds.slice(1, orderedIds.length-2); // jumlah fleksibel, tidak dibatasi 5
     const strip = document.getElementById('thumbStrip');
     strip.innerHTML = thumbIds.map((id) => {
       const st = bilikState[id]; if(!st) return '';
