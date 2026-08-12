@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin — Ruang Infografis MAN Balikpapan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --emerald-950:#0A2620; --emerald-900:#0D3229; --emerald-800:#124A3B; --emerald-700:#186552; --emerald-600:#1F8267;
+    --gold-500:#C9A227; --gold-400:#DDBE55; --gold-200:#F0DFA0;
+    --paper:#F2F4EE; --card:#FFFFFF; --ink:#12211C; --ink-soft:#4A5C55; --line:#DCE3D9; --danger:#B3402A;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; min-height:100vh; }
+  button{ font-family:inherit; cursor:pointer; }
+  input, select{ font-family:inherit; }
+
+  /* ---------- LOGIN ---------- */
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(201,162,39,0.12), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(201,162,39,0.10), transparent 45%),
+      linear-gradient(160deg, var(--emerald-950), var(--emerald-800));
+  }
+  .login-card{
+    width:100%; max-width:380px; background:var(--card); border-radius:20px; padding:32px 28px;
+    box-shadow:0 24px 60px -18px rgba(0,0,0,0.5); border-top:4px solid var(--gold-500);
+  }
+  .login-card .emblem{
+    width:52px;height:52px;border-radius:50%; margin:0 auto 14px;
+    background:radial-gradient(circle at 35% 30%, var(--gold-200), var(--gold-500) 60%, #8a6d16 100%);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .login-card .emblem svg{ width:60%;height:60%; }
+  .login-card h1{ font-family:'Sora',sans-serif; font-size:19px; text-align:center; margin:0 0 2px; }
+  .login-card p.sub{ text-align:center; font-size:12.5px; color:var(--ink-soft); margin:0 0 22px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:var(--ink-soft); }
+  .field input{ width:100%; padding:10px 12px; border:1.5px solid var(--line); border-radius:8px; font-size:14px; }
+  .field input:focus{ outline:none; border-color:var(--emerald-600); }
+  .btn-primary{ width:100%; padding:11px; border:none; border-radius:8px; background:var(--emerald-800); color:#fff; font-weight:700; font-size:14px; margin-top:6px; }
+  .btn-primary:hover{ background:var(--emerald-700); }
+  .login-error{ background:#FBEAE6; color:var(--danger); font-size:12.5px; padding:9px 11px; border-radius:8px; margin-bottom:14px; display:none; }
+
+  /* ---------- DASHBOARD SHELL ---------- */
+  #dashScreen{ display:none; min-height:100vh; }
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    background:linear-gradient(160deg, var(--emerald-950), var(--emerald-800)); color:#fff;
+    padding:14px 24px; border-bottom:4px solid var(--gold-500);
+  }
+  .topbar .who{ font-size:13px; }
+  .topbar .who b{ color:var(--gold-200); }
+  .topbar .role-pill{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase;
+    background:rgba(201,162,39,0.2); border:1px solid var(--gold-500); color:var(--gold-200);
+    padding:3px 9px; border-radius:999px; margin-left:8px;
+  }
+  .topbar h1{ font-family:'Sora',sans-serif; font-size:16px; margin:0; }
+  .btn-ghost{ background:transparent; border:1.5px solid rgba(255,255,255,0.4); color:#fff; padding:7px 14px; border-radius:8px; font-size:12.5px; font-weight:600; }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.1); }
+
+  .tabs{ display:flex; gap:6px; padding:16px 24px 0; flex-wrap:wrap; }
+  .tab-btn{
+    border:1.5px solid var(--line); background:#fff; padding:9px 16px; border-radius:999px;
+    font-size:13px; font-weight:600; color:var(--ink-soft);
+  }
+  .tab-btn.active{ background:var(--emerald-800); border-color:var(--emerald-800); color:#fff; }
+
+  .panel{ display:none; padding:20px 24px 60px; max-width:1100px; margin:0 auto; }
+  .panel.active{ display:block; }
+
+  .bilik-card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .bilik-card .head-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .badge{ font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 9px; border-radius:999px; color:#fff; }
+  .badge.gambar{ background:var(--emerald-700); } .badge.video{ background:#8A3B1F; } .badge.dokumen{ background:var(--emerald-900); }
+  .bilik-card h3{ font-family:'Sora',sans-serif; font-size:16px; margin:0; flex:1; }
+  .icon-btn{ border:1px solid var(--line); background:#fff; border-radius:7px; padding:6px 10px; font-size:12px; color:var(--ink-soft); }
+  .icon-btn.danger{ color:var(--danger); border-color:#EFC9C0; }
+  .bilik-card .fungsi-text{ font-size:12.5px; color:var(--ink-soft); margin:0 0 14px; }
+
+  .item-list{ list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:7px; }
+  .item-list li{ display:flex; align-items:center; gap:10px; font-size:12.5px; background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 10px; }
+  .item-list li .ititle{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .item-list li a{ color:var(--emerald-800); text-decoration:none; font-weight:600; }
+
+  .add-item-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .add-item-row input[type=text]{ flex:1; min-width:160px; padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; font-size:12.5px; }
+  .add-item-row input[type=file]{ font-size:12px; }
+  .btn-small{ padding:9px 14px; border:none; border-radius:8px; background:var(--emerald-800); color:#fff; font-size:12.5px; font-weight:700; }
+  .btn-small:hover{ background:var(--emerald-700); }
+  .upload-progress{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold-500); margin-top:6px; display:none; }
+
+  .empty-state{ text-align:center; color:var(--ink-soft); font-size:13px; padding:40px 0; }
+
+  /* Kelola Akun */
+  .account-card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin-bottom:18px; }
+  .account-card h3{ font-family:'Sora',sans-serif; font-size:15px; margin:0 0 12px; }
+  .acc-row{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .acc-row:last-child{ border-bottom:none; }
+  .acc-row .acc-name{ font-weight:700; flex:0 0 auto; }
+  .acc-row .acc-email{ color:var(--ink-soft); flex:1; }
+  .add-admin-form{ display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; margin-top:6px; }
+  .add-admin-form input{ padding:9px 11px; border:1.5px solid var(--line); border-radius:8px; font-size:12.5px; }
+  @media (max-width:700px){ .add-admin-form{ grid-template-columns:1fr; } }
+
+  .toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; border-radius:8px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:50; }
+  .toast.show{ opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- ============== LOGIN ============== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="emblem" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v2h18V7l-9-5z" fill="#0A2620"/><rect x="4" y="10" width="16" height="9" rx="1" fill="#0A2620"/></svg>
+    </div>
+    <h1>Dashboard Admin</h1>
+    <p class="sub">Ruang Infografis · MAN Balikpapan</p>
+    <div class="login-error" id="loginError"></div>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
+      <div class="field"><label>Kata Sandi</label><input type="password" id="loginPassword" required autocomplete="current-password"></div>
+      <button type="submit" class="btn-primary">Masuk</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============== DASHBOARD ============== -->
+<div id="dashScreen">
+  <div class="topbar">
+    <h1>Ruang Infografis — Dashboard</h1>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div class="who">Masuk sebagai <b id="whoName">-</b><span class="role-pill" id="whoRole">-</span></div>
+      <button class="btn-ghost" id="btnLogout">Keluar</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="konten">Kelola Konten Bilik</button>
+    <button class="tab-btn" data-tab="akun" id="tabAkunBtn" style="display:none;">Kelola Akun Admin</button>
+  </div>
+
+  <!-- TAB: KONTEN -->
+  <div class="panel active" id="panelKonten">
+    <div id="bilikList"></div>
+  </div>
+
+  <!-- TAB: AKUN (khusus admin utama) -->
+  <div class="panel" id="panelAkun">
+    <div class="account-card">
+      <h3>Tambah Operator Baru</h3>
+      <div class="add-admin-form">
+        <input type="text" id="newAdminName" placeholder="Nama">
+        <input type="email" id="newAdminEmail" placeholder="Email">
+        <input type="password" id="newAdminPassword" placeholder="Kata sandi (min. 6 karakter)">
+        <button class="btn-small" id="btnAddSubAdmin">Tambah</button>
+      </div>
+    </div>
+    <div class="account-card">
+      <h3>Daftar Admin</h3>
+      <div id="accountList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { auth, db, storage, firebaseConfig } from './firebase-config.js';
+  import {
+    signInWithEmailAndPassword, onAuthStateChanged, signOut,
+    createUserWithEmailAndPassword, initializeApp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { initializeApp as initApp2 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth as getAuth2, signOut as signOut2 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    collection, doc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, addDoc,
+    query, orderBy, onSnapshot, serverTimestamp, writeBatch
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  const $ = (sel) => document.querySelector(sel);
+  function toast(msg){
+    const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2600);
+  }
+
+  /* ---------------- LOGIN ---------------- */
+  $('#loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('#loginError').style.display = 'none';
+    try{
+      await signInWithEmailAndPassword(auth, $('#loginEmail').value.trim(), $('#loginPassword').value);
+    }catch(err){
+      $('#loginError').textContent = 'Gagal masuk: email atau kata sandi salah.';
+      $('#loginError').style.display = 'block';
+    }
+  });
+  $('#btnLogout').addEventListener('click', () => signOut(auth));
+
+  let currentRole = null;
+  let currentUid = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user){
+      $('#loginScreen').style.display = 'flex';
+      $('#dashScreen').style.display = 'none';
+      return;
+    }
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if(!userDoc.exists()){
+      $('#loginError').textContent = 'Akun ini belum terdaftar sebagai admin. Hubungi Admin Utama.';
+      $('#loginError').style.display = 'block';
+      await signOut(auth);
+      return;
+    }
+    const data = userDoc.data();
+    currentRole = data.role;
+    currentUid = user.uid;
+    $('#whoName').textContent = data.name || user.email;
+    $('#whoRole').textContent = data.role === 'admin_utama' ? 'Admin Utama' : 'Operator';
+    $('#loginScreen').style.display = 'none';
+    $('#dashScreen').style.display = 'block';
+    $('#tabAkunBtn').style.display = data.role === 'admin_utama' ? 'inline-block' : 'none';
+    loadBiliks();
+    if(data.role === 'admin_utama') loadAccounts();
+  });
+
+  /* ---------------- TABS ---------------- */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      $('#panel' + (btn.dataset.tab === 'konten' ? 'Konten' : 'Akun')).classList.add('active');
+    });
+  });
+
+  /* ---------------- KELOLA KONTEN BILIK ---------------- */
+  const DEFAULT_BILIKS = [
+    { name:'Bilik Pengumuman & Edaran', fungsi:'Surat edaran, pengumuman resmi, dan SK madrasah.', type:'dokumen', order:1 },
+    { name:'Bilik Jadwal & Agenda', fungsi:'Jadwal pelajaran, agenda kegiatan, kalender akademik.', type:'dokumen', order:2 },
+    { name:'Bilik Video Profil & Tausiyah', fungsi:'Video profil madrasah, tausiyah, dan tayangan edukatif.', type:'video', order:3 },
+    { name:'Bilik Galeri Kegiatan', fungsi:'Dokumentasi foto KBM, ekstrakurikuler, dan acara madrasah.', type:'gambar', order:4 },
+    { name:'Bilik Prestasi Siswa', fungsi:'Foto piagam, piala, dan capaian siswa.', type:'gambar', order:5 },
+    { name:'Bilik Berkas Unduhan', fungsi:'Formulir dan berkas administrasi untuk siswa/wali.', type:'dokumen', order:6 }
+  ];
+
+  async function loadBiliks(){
+    const q = query(collection(db, 'biliks'), orderBy('order'));
+    onSnapshot(q, (snap) => {
+      const list = $('#bilikList');
+      if(snap.empty){
+        list.innerHTML = '<div class="empty-state">Belum ada data bilik.<br><br><button class="btn-small" id="btnSeed">Buat 6 Bilik Contoh</button></div>';
+        const seedBtn = document.getElementById('btnSeed');
+        if(seedBtn) seedBtn.addEventListener('click', seedBiliks);
+        return;
+      }
+      list.innerHTML = '';
+      snap.forEach(d => renderBilikCard(d.id, d.data()));
+    });
+  }
+
+  async function seedBiliks(){
+    const batch = writeBatch(db);
+    DEFAULT_BILIKS.forEach(b => {
+      const ref2 = doc(collection(db, 'biliks'));
+      batch.set(ref2, b);
+    });
+    await batch.commit();
+    toast('6 bilik contoh berhasil dibuat.');
+  }
+
+  function renderBilikCard(id, bilik){
+    let card = document.querySelector('[data-bilik-id="'+id+'"]');
+    if(!card){
+      card = document.createElement('div');
+      card.className = 'bilik-card';
+      card.setAttribute('data-bilik-id', id);
+      $('#bilikList').appendChild(card);
+    }
+    card.innerHTML =
+      '<div class="head-row">'+
+        '<span class="badge '+bilik.type+'">'+bilik.type+'</span>'+
+        '<h3>'+bilik.name+'</h3>'+
+      '</div>'+
+      '<p class="fungsi-text">'+(bilik.fungsi||'')+'</p>'+
+      '<ul class="item-list" id="items-'+id+'"><li>Memuat…</li></ul>'+
+      '<div class="add-item-row">'+
+        '<input type="text" placeholder="Judul konten" id="title-'+id+'">'+
+        '<input type="text" placeholder="Tautan URL (opsional, contoh: YouTube)" id="url-'+id+'">'+
+        '<input type="file" id="file-'+id+'">'+
+        '<button class="btn-small" data-add="'+id+'">Tambah Konten</button>'+
+      '</div>'+
+      '<div class="upload-progress" id="prog-'+id+'"></div>';
+
+    card.querySelector('[data-add]').addEventListener('click', () => addItem(id, bilik.type));
+
+    onSnapshot(query(collection(db, 'biliks', id, 'items'), orderBy('addedAt','desc')), (itemsSnap) => {
+      const ul = document.getElementById('items-'+id);
+      if(itemsSnap.empty){ ul.innerHTML = '<li style="color:var(--ink-soft)">Belum ada konten.</li>'; return; }
+      ul.innerHTML = '';
+      itemsSnap.forEach(itDoc => {
+        const it = itDoc.data();
+        const li = document.createElement('li');
+        li.innerHTML = '<span class="ititle"><a href="'+it.url+'" target="_blank" rel="noopener">'+(it.title||'Berkas')+'</a></span>'+
+          '<button class="icon-btn danger" data-del="'+itDoc.id+'">Hapus</button>';
+        li.querySelector('[data-del]').addEventListener('click', async () => {
+          if(confirm('Hapus konten "'+(it.title||'ini')+'"?')){
+            await deleteDoc(doc(db, 'biliks', id, 'items', itDoc.id));
+            toast('Konten dihapus.');
+          }
+        });
+        ul.appendChild(li);
+      });
+    });
+  }
+
+  async function addItem(bilikId, type){
+    const titleInput = document.getElementById('title-'+bilikId);
+    const urlInput = document.getElementById('url-'+bilikId);
+    const fileInput = document.getElementById('file-'+bilikId);
+    const progEl = document.getElementById('prog-'+bilikId);
+    const title = titleInput.value.trim();
+    let url = urlInput.value.trim();
+
+    if(!title){ toast('Judul konten wajib diisi.'); return; }
+    if(!url && (!fileInput.files || !fileInput.files[0])){ toast('Isi tautan URL atau unggah berkas.'); return; }
+
+    try{
+      if(!url && fileInput.files[0]){
+        const file = fileInput.files[0];
+        progEl.style.display = 'block';
+        progEl.textContent = 'Mengunggah berkas...';
+        const storageRef = ref(storage, 'bilik-uploads/' + bilikId + '/' + Date.now() + '_' + file.name);
+        await uploadBytes(storageRef, file);
+        url = await getDownloadURL(storageRef);
+        progEl.textContent = 'Unggah selesai.';
+        setTimeout(()=>{ progEl.style.display='none'; }, 1500);
+      }
+      await addDoc(collection(db, 'biliks', bilikId, 'items'), {
+        title, url, type, addedAt: serverTimestamp(), addedBy: auth.currentUser.email
+      });
+      titleInput.value=''; urlInput.value=''; fileInput.value='';
+      toast('Konten berhasil ditambahkan.');
+    }catch(err){
+      console.error(err);
+      progEl.style.display = 'none';
+      toast('Gagal menambah konten: ' + err.message);
+    }
+  }
+
+  /* ---------------- KELOLA AKUN ADMIN (khusus admin utama) ---------------- */
+  async function loadAccounts(){
+    onSnapshot(collection(db, 'users'), (snap) => {
+      const box = $('#accountList');
+      box.innerHTML = '';
+      snap.forEach(d => {
+        const u = d.data();
+        const row = document.createElement('div');
+        row.className = 'acc-row';
+        row.innerHTML = '<span class="acc-name">'+(u.name||'-')+'</span>'+
+          '<span class="acc-email">'+(u.email||'-')+'</span>'+
+          '<span class="role-pill" style="color:var(--emerald-800); border-color:var(--emerald-800); background:transparent;">'+
+            (u.role === 'admin_utama' ? 'Admin Utama' : 'Operator') + '</span>'+
+          (d.id !== currentUid ? '<button class="icon-btn danger" data-revoke="'+d.id+'">Cabut Akses</button>' : '');
+        const revokeBtn = row.querySelector('[data-revoke]');
+        if(revokeBtn){
+          revokeBtn.addEventListener('click', async () => {
+            if(confirm('Cabut akses admin untuk '+u.email+'? (Akun tidak bisa login lagi ke dashboard ini)')){
+              await deleteDoc(doc(db,'users', d.id));
+              toast('Akses dicabut.');
+            }
+          });
+        }
+        box.appendChild(row);
+      });
+    });
+  }
+
+  $('#btnAddSubAdmin').addEventListener('click', async () => {
+    const name = $('#newAdminName').value.trim();
+    const email = $('#newAdminEmail').value.trim();
+    const password = $('#newAdminPassword').value;
+    if(!name || !email || password.length < 6){
+      toast('Lengkapi nama, email, dan kata sandi (min. 6 karakter).');
+      return;
+    }
+    try{
+      // Buat akun via instance Firebase kedua agar sesi Admin Utama tidak ikut ter-logout
+      const secondaryApp = initApp2(firebaseConfig, 'Secondary-' + Date.now());
+      const secondaryAuth = getAuth2(secondaryApp);
+      const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        name, email, role: 'operator', createdAt: serverTimestamp()
+      });
+      await signOut2(secondaryAuth);
+      $('#newAdminName').value=''; $('#newAdminEmail').value=''; $('#newAdminPassword').value='';
+      toast('Sub admin "'+name+'" berhasil dibuat.');
+    }catch(err){
+      console.error(err);
+      toast('Gagal membuat akun: ' + err.message);
+    }
+  });
+</script>
+</body>
+</html>

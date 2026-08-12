@@ -2,250 +2,201 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1920, initial-scale=1.0">
-<title>Ruang Infografis — MAN Balikpapan (Layar TV)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruang Infografis — MAN Balikpapan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --emerald-950:#0A2620;
-    --emerald-900:#0D3229;
-    --emerald-800:#124A3B;
-    --emerald-700:#186552;
-    --emerald-600:#1F8267;
-    --gold-500:#C9A227;
-    --gold-400:#DDBE55;
-    --gold-200:#F0DFA0;
-    --paper:#F2F4EE;
-    --paper-card:#FFFFFF;
-    --ink:#12211C;
-    --ink-soft:#4A5C55;
-    --line:#DCE3D9;
+    --emerald-950:#0A2620; --emerald-900:#0D3229; --emerald-800:#124A3B;
+    --emerald-700:#186552; --emerald-600:#1F8267;
+    --gold-500:#C9A227; --gold-400:#DDBE55; --gold-200:#F0DFA0;
+    --paper:#F2F4EE; --paper-card:#FFFFFF; --ink:#12211C; --ink-soft:#4A5C55; --line:#DCE3D9;
   }
-
   *{box-sizing:border-box;}
-  html,body{
-    margin:0;padding:0;
-    width:100%;height:100%;
-    overflow:hidden;           /* papan TV: tidak ada scroll */
-  }
+  html,body{margin:0;padding:0;width:100%;}
   body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Plus Jakarta Sans', sans-serif;
-    display:flex;
-    flex-direction:column;
-    height:100vh;
-    width:100vw;
+    background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif;
+    min-height:100vh; display:flex; flex-direction:column;
   }
-
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
   }
+  @media (min-width:900px){
+    html,body{ height:100%; overflow:hidden; }
+    body{ height:100vh; }
+  }
 
-  /* ---------- HEADER (proporsi tetap terhadap tinggi layar) ---------- */
+  /* ---------- HEADER ---------- */
   header.board-header{
-    position:relative;
-    flex:0 0 auto;
-    height:15vh;
+    position:relative; flex:0 0 auto;
     background:
       radial-gradient(circle at 15% 20%, rgba(201,162,39,0.10), transparent 40%),
       radial-gradient(circle at 85% 80%, rgba(201,162,39,0.08), transparent 45%),
       linear-gradient(160deg, var(--emerald-950), var(--emerald-800));
-    color:#fff;
-    padding:0 2.2vw;
-    display:flex;
-    align-items:center;
-    overflow:hidden;
-    border-bottom:0.35vh solid var(--gold-500);
+    color:#fff; padding:clamp(12px,1.8vh,20px) clamp(16px,2.4vw,34px);
+    overflow:hidden; border-bottom:4px solid var(--gold-500);
   }
   header.board-header::before{
-    content:"";
-    position:absolute; inset:0; opacity:0.10;
+    content:""; position:absolute; inset:0; opacity:0.10;
     background-image:
       repeating-linear-gradient(45deg, transparent 0 18px, rgba(255,255,255,0.5) 18px 19px),
       repeating-linear-gradient(-45deg, transparent 0 18px, rgba(255,255,255,0.5) 18px 19px);
-    background-size:40px 40px;
-    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    background-size:40px 40px; mask-image: linear-gradient(to bottom, black, transparent 85%);
     pointer-events:none;
   }
+  .header-grid{ position:relative; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:16px; }
 
-  .header-grid{
-    position:relative;
-    width:100%;
-    display:grid;
-    grid-template-columns:1fr auto 1fr;
-    align-items:center;
-    gap:1.4vw;
-  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .header-grid > .brand-left{ justify-self:start; }
+  .right-cluster{ justify-self:end; display:flex; align-items:center; gap:20px; }
 
-  .brand{ display:flex; align-items:center; gap:1vw; }
-  .brand-emblem{
-    width:6.2vh;height:6.2vh;flex:none;
-    border-radius:50%;
+  .logo-slot{ position:relative; width:clamp(38px,5.4vh,54px); height:clamp(38px,5.4vh,54px); flex:none; }
+  .logo-slot img{ width:100%; height:100%; object-fit:contain; border-radius:8px; display:block; }
+  .logo-slot .logo-fallback{
+    display:none; width:100%; height:100%; border-radius:50%; align-items:center; justify-content:center;
     background:radial-gradient(circle at 35% 30%, var(--gold-200), var(--gold-500) 60%, #8a6d16 100%);
-    display:flex;align-items:center;justify-content:center;
+    color:#0A2620; font-family:'JetBrains Mono', monospace; font-weight:700; font-size:clamp(7px,1vh,9px); text-align:center; line-height:1.1;
     box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35), 0 4px 12px rgba(0,0,0,0.35);
   }
-  .brand-emblem svg{width:60%;height:60%;}
+  .logo-slot.fallback img{ display:none; }
+  .logo-slot.fallback .logo-fallback{ display:flex; }
+
   .brand-text{line-height:1.2;}
-  .brand-text .brand-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:1.9vh; }
-  .brand-text .brand-sub{ font-size:1.3vh; color:var(--gold-200); font-weight:500; margin-top:0.3vh; }
+  .brand-text .brand-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:clamp(12px,1.7vh,15px); }
+  .brand-text .brand-sub{ font-size:clamp(9px,1.2vh,11.5px); color:var(--gold-200); font-weight:500; margin-top:2px; }
 
   .title-block{text-align:center;}
-  .title-block .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:1.2vh; letter-spacing:0.4vh; color:var(--gold-400); text-transform:uppercase; }
-  .title-block h1{ font-family:'Sora', sans-serif; font-weight:800; font-size:4.4vh; letter-spacing:0.15vh; margin:0.3vh 0 0.6vh; }
-  .title-rule{ width:9vw; height:0.22vh; margin:0 auto 0.7vh; background:linear-gradient(90deg, transparent, var(--gold-500), transparent); }
-  .title-block .agenda-line{ font-size:1.9vh; color:var(--gold-200); font-weight:600; letter-spacing:0.03vh; }
+  .title-block .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.2vh,11px); letter-spacing:3px; color:var(--gold-400); text-transform:uppercase; }
+  .title-block h1{ font-family:'Sora', sans-serif; font-weight:800; font-size:clamp(18px,3.8vh,34px); letter-spacing:1px; margin:2px 0 6px; }
+  .title-rule{ width:100px; height:2px; margin:0 auto 8px; background:linear-gradient(90deg, transparent, var(--gold-500), transparent); }
+  .title-block .agenda-line{ font-size:clamp(11px,1.7vh,14px); color:var(--gold-200); font-weight:600; }
 
   .clock-wrap{ display:flex; flex-direction:column; align-items:flex-end; text-align:right; }
-  .clock-time{
-    font-family:'JetBrains Mono', monospace; font-weight:700; font-size:4.2vh;
-    color:var(--gold-200); letter-spacing:0.15vh;
-    text-shadow:0 0 14px rgba(221,190,85,0.35);
-    font-variant-numeric:tabular-nums;
-  }
+  .clock-time{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:clamp(16px,3.4vh,28px); color:var(--gold-200); letter-spacing:1px; text-shadow:0 0 14px rgba(221,190,85,0.35); font-variant-numeric:tabular-nums; }
   .clock-time .colon{ animation: blink 1s steps(1) infinite; }
   @keyframes blink{ 50%{ opacity:0.25; } }
-  .clock-date{ font-family:'JetBrains Mono', monospace; font-size:1.5vh; color:rgba(255,255,255,0.75); margin-top:0.3vh; text-transform:capitalize; }
+  .clock-date{ font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.3vh,11px); color:rgba(255,255,255,0.75); margin-top:2px; text-transform:capitalize; }
 
-  /* ---------- MAIN / BILIK GRID (mengisi sisa tinggi layar, tanpa scroll) ---------- */
-  main{
-    flex:1 1 auto;
-    min-height:0;
-    padding:2vh 2.2vw;
-    display:flex;
-    flex-direction:column;
+  @media (max-width:820px){
+    .header-grid{grid-template-columns:1fr; text-align:center;}
+    .brand{justify-content:center;} .right-cluster{justify-self:center; flex-wrap:wrap; justify-content:center;}
+    .clock-wrap{align-items:center;text-align:center;}
   }
-  .section-intro{ flex:0 0 auto; text-align:center; margin-bottom:1.4vh; }
-  .section-intro h2{
-    font-family:'Sora', sans-serif; font-size:1.7vh; font-weight:700;
-    letter-spacing:0.35vh; text-transform:uppercase; color:var(--emerald-800); margin:0 0 0.4vh;
-  }
-  .section-intro p{ font-size:1.45vh; color:var(--ink-soft); margin:0; }
 
-  .bilik-grid{
-    flex:1 1 auto;
-    min-height:0;
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    grid-template-rows:repeat(2, 1fr);
-    gap:2vh 1.6vw;
+  /* ---------- PRAYER TIME BAR ---------- */
+  .prayer-bar{
+    flex:0 0 auto; display:flex; align-items:center; gap:clamp(8px,1.4vw,18px);
+    background:var(--emerald-900); border-bottom:2px solid var(--gold-500);
+    padding:clamp(6px,1vh,10px) clamp(16px,2.4vw,34px); overflow-x:auto; white-space:nowrap;
   }
+  .prayer-bar .label{
+    font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.2vh,11px); letter-spacing:1px; text-transform:uppercase;
+    color:var(--gold-400); flex:none; font-weight:700;
+  }
+  .prayer-item{
+    display:inline-flex; align-items:center; gap:6px; font-size:clamp(11px,1.4vh,13px);
+    color:rgba(255,255,255,0.85); padding:3px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12);
+  }
+  .prayer-item .pname{ font-weight:600; }
+  .prayer-item .ptime{ font-family:'JetBrains Mono', monospace; color:var(--gold-200); }
+  .prayer-item.next{ background:rgba(201,162,39,0.22); border-color:var(--gold-500); }
+  .prayer-note{ font-size:11.5px; color:rgba(255,255,255,0.6); font-style:italic; }
+
+  /* ---------- MAIN / BILIK GRID ---------- */
+  main{ flex:1 1 auto; min-height:0; padding:clamp(12px,1.8vh,22px) clamp(14px,2.4vw,34px); display:flex; flex-direction:column; }
+  .section-intro{ flex:0 0 auto; text-align:center; margin-bottom:clamp(8px,1.2vh,14px); }
+  .section-intro h2{ font-family:'Sora', sans-serif; font-size:clamp(11px,1.5vh,14px); font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--emerald-800); margin:0 0 3px; }
+  .section-intro p{ font-size:clamp(10px,1.3vh,12.5px); color:var(--ink-soft); margin:0; }
+
+  .bilik-grid{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(12px,1.8vh,20px) clamp(12px,1.6vw,20px); }
+  @media (min-width:900px){ .bilik-grid{ grid-template-rows:repeat(2, 1fr); } }
+  @media (max-width:980px){ .bilik-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:620px){ .bilik-grid{grid-template-columns:1fr;} main{overflow-y:auto;} }
 
   .bilik{
-    position:relative;
-    min-height:0;
-    display:flex;
-    flex-direction:column;
-    background:var(--paper-card);
-    border:1px solid var(--line);
-    border-top:none;
-    border-radius:6vh 6vh 1vh 1vh;
-    padding:2.6vh 1.4vw 1.4vh;
-    box-shadow:0 1vh 2.4vh -1vh rgba(10,38,32,0.22);
-    transition:box-shadow .5s ease, transform .5s ease, border-color .5s ease;
+    position:relative; min-height:0; display:flex; flex-direction:column;
+    background:var(--paper-card); border:1px solid var(--line); border-top:none;
+    border-radius:56px 56px 12px 12px; padding:24px 16px 14px;
+    box-shadow:0 10px 24px -10px rgba(10,38,32,0.22);
+    transition:box-shadow .5s ease, transform .5s ease;
   }
   .bilik::before{
-    content:"";
-    position:absolute; top:0; left:50%;
-    width:1.3vh;height:1.3vh;
-    background:var(--gold-500); border-radius:50%;
-    transform:translate(-50%,-50%);
-    box-shadow:0 0 0 0.5vh var(--paper-card), 0 0 0 0.6vh var(--line);
+    content:""; position:absolute; top:0; left:50%; width:13px;height:13px;
+    background:var(--gold-500); border-radius:50%; transform:translate(-50%,-50%);
+    box-shadow:0 0 0 5px var(--paper-card), 0 0 0 6px var(--line);
   }
   .bilik::after{
-    content:"";
-    position:absolute; top:1.1vh; left:1.1vh; right:1.1vh; height:2px;
-    background:repeating-linear-gradient(90deg, var(--gold-500) 0 6px, transparent 6px 12px);
-    opacity:0.6;
+    content:""; position:absolute; top:11px; left:11px; right:11px; height:2px;
+    background:repeating-linear-gradient(90deg, var(--gold-500) 0 6px, transparent 6px 12px); opacity:0.6;
   }
+  .bilik.active{ box-shadow:0 16px 34px -10px rgba(201,162,39,0.35); transform:translateY(-6px); }
+  .bilik.active::before{ box-shadow:0 0 0 5px var(--paper-card), 0 0 8px 4px var(--gold-400); }
 
-  /* sorotan otomatis bergilir — pengganti interaksi klik pada layar TV */
-  .bilik.active{
-    box-shadow:0 1.6vh 3.4vh -1vh rgba(201,162,39,0.35);
-    transform:translateY(-0.6vh);
-  }
-  .bilik.active::before{ box-shadow:0 0 0 0.5vh var(--paper-card), 0 0 0.8vh 0.4vh var(--gold-400); }
-
-  .badge{
-    align-self:flex-start;
-    display:inline-flex; align-items:center; gap:0.5vh;
-    font-family:'JetBrains Mono', monospace; font-size:1.15vh; font-weight:700;
-    letter-spacing:0.15vh; text-transform:uppercase;
-    padding:0.6vh 1.1vh; border-radius:999px; color:#fff;
-  }
+  .badge{ align-self:flex-start; display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono', monospace; font-size:10.5px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:5px 10px; border-radius:999px; color:#fff; }
   .badge.gambar{ background:var(--emerald-700); }
   .badge.video{ background:#8A3B1F; }
   .badge.dokumen{ background:var(--emerald-900); }
 
-  .bilik h3{ font-family:'Sora', sans-serif; font-size:2vh; font-weight:700; margin:1.1vh 0 0.4vh; color:var(--ink); }
-  .bilik .fungsi{ font-size:1.4vh; color:var(--ink-soft); line-height:1.4; margin:0 0 1.2vh; }
+  .bilik h3{ font-family:'Sora', sans-serif; font-size:15px; font-weight:700; margin:9px 0 3px; color:var(--ink); }
+  .bilik .fungsi{ font-size:11.5px; color:var(--ink-soft); line-height:1.4; margin:0 0 9px; }
 
-  .preview{ flex:1 1 auto; min-height:0; border:1.5px dashed var(--line); border-radius:1vh; padding:1.2vh; background:#FAFBF8; display:flex; flex-direction:column; }
-  .preview .preview-title{
-    font-weight:700; color:var(--ink); font-size:1.2vh; text-transform:uppercase; letter-spacing:0.06vh;
-    margin-bottom:0.8vh; display:flex; align-items:center; justify-content:space-between; flex:0 0 auto;
-  }
+  .preview{ flex:1 1 auto; min-height:0; border:1.5px dashed var(--line); border-radius:10px; padding:10px; background:#FAFBF8; display:flex; flex-direction:column; overflow:hidden; }
+  .preview .preview-title{ font-weight:700; color:var(--ink); font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:7px; display:flex; align-items:center; justify-content:space-between; flex:0 0 auto; }
   .preview .preview-title span.count{ font-family:'JetBrains Mono', monospace; color:var(--gold-500); font-weight:700; }
+  .preview .empty-note{ font-size:11.5px; color:var(--ink-soft); font-style:italic; margin:auto; text-align:center; }
 
-  .thumb-row{ display:flex; gap:0.6vh; flex:1 1 auto; min-height:0; }
-  .thumb{ flex:1; border-radius:0.8vh; background:linear-gradient(135deg, var(--emerald-600), var(--emerald-800)); display:flex; align-items:center; justify-content:center; }
-  .thumb svg{ width:2.2vh; height:2.2vh; opacity:0.85; }
+  .thumb-row{ display:flex; gap:6px; flex:1 1 auto; min-height:0; }
+  .thumb{ flex:1; border-radius:7px; overflow:hidden; background:linear-gradient(135deg, var(--emerald-600), var(--emerald-800)); display:flex; align-items:center; justify-content:center; }
+  .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .thumb svg{ width:16px;height:16px; opacity:0.85; }
 
-  .video-box{ position:relative; flex:1 1 auto; min-height:0; border-radius:0.9vh; background:linear-gradient(135deg,#3A1A0E,#8A3B1F); display:flex; align-items:center; justify-content:center; }
-  .video-box .play{ width:4.4vh; height:4.4vh; border-radius:50%; background:rgba(255,255,255,0.92); display:flex; align-items:center; justify-content:center; }
-  .video-box .play svg{ width:1.8vh; height:1.8vh; }
-  .video-box .dur{ position:absolute; bottom:0.8vh; right:1vh; font-family:'JetBrains Mono', monospace; font-size:1.15vh; color:#fff; background:rgba(0,0,0,0.55); padding:0.2vh 0.7vh; border-radius:0.5vh; }
+  .video-item{ position:relative; flex:1 1 auto; min-height:0; border-radius:8px; overflow:hidden; background:#000; }
+  .video-item video, .video-item iframe{ width:100%; height:100%; border:0; display:block; object-fit:cover; }
+  .video-item .vlabel{ position:absolute; bottom:6px; left:8px; right:8px; font-size:10.5px; color:#fff; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-  .doc-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.7vh; flex:1 1 auto; min-height:0; justify-content:center; }
-  .doc-list li{ display:flex; align-items:center; gap:0.8vh; font-size:1.35vh; color:var(--ink); padding:0.7vh 0.9vh; background:#fff; border:1px solid var(--line); border-radius:0.7vh; }
-  .doc-list li svg{ flex:none; width:1.6vh; height:1.6vh; color:var(--emerald-800); }
+  .doc-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; flex:1 1 auto; min-height:0; overflow-y:auto; }
+  .doc-list li a{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink); padding:6px 8px; background:#fff; border:1px solid var(--line); border-radius:6px; text-decoration:none; }
+  .doc-list li svg{ flex:none; width:14px;height:14px; color:var(--emerald-800); }
   .doc-list li .fname{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .doc-list li .fdate{ font-family:'JetBrains Mono', monospace; font-size:1.1vh; color:var(--ink-soft); }
+  .doc-list li .fdate{ font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--ink-soft); }
 
-  /* ---------- FOOTER / RUNNING TEXT ---------- */
-  footer.marquee-bar{
-    flex:0 0 auto;
-    height:5.5vh;
-    background:linear-gradient(90deg, var(--emerald-950), var(--emerald-800));
-    border-top:0.3vh solid var(--gold-500);
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    white-space:nowrap;
-  }
+  /* ---------- FOOTER ---------- */
+  footer.marquee-bar{ flex:0 0 auto; background:linear-gradient(90deg, var(--emerald-950), var(--emerald-800)); border-top:3px solid var(--gold-500); overflow:hidden; padding:9px 0; white-space:nowrap; }
   .marquee-track{ display:inline-flex; animation: scroll-left 24s linear infinite; }
-  .marquee-track span{
-    display:inline-flex; align-items:center; gap:1vh; padding-right:6vw;
-    font-family:'JetBrains Mono', monospace; font-size:1.9vh; font-weight:500;
-    color:var(--gold-200); letter-spacing:0.05vh;
-  }
-  .marquee-track span::before{ content:"●"; color:var(--gold-500); font-size:0.9vh; }
+  .marquee-track span{ display:inline-flex; align-items:center; gap:10px; padding-right:60px; font-family:'JetBrains Mono', monospace; font-size:12.5px; font-weight:500; color:var(--gold-200); letter-spacing:0.4px; }
+  .marquee-track span::before{ content:"●"; color:var(--gold-500); font-size:8px; }
+  footer.marquee-bar:hover .marquee-track{ animation-play-state:paused; }
   @keyframes scroll-left{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
   @media (prefers-reduced-motion: reduce){
     .marquee-track{ animation:none; justify-content:center; width:100%; }
     .marquee-track span:nth-child(2){ display:none; }
   }
+
+  /* ---------- FLOATING CONTROLS (fullscreen + backsound) ---------- */
+  .float-controls{ position:fixed; right:14px; bottom:14px; display:flex; flex-direction:column; gap:8px; z-index:40; }
+  .float-btn{
+    display:flex; align-items:center; gap:6px; font-family:'Plus Jakarta Sans', sans-serif; font-size:11.5px; font-weight:600;
+    background:rgba(10,38,32,0.75); color:#fff; border:1px solid rgba(255,255,255,0.25); border-radius:999px;
+    padding:8px 12px; cursor:pointer; backdrop-filter:blur(3px);
+  }
+  .float-btn:hover{ background:rgba(10,38,32,0.92); }
+  .float-btn svg{ width:14px; height:14px; }
 </style>
 </head>
 <body>
 
 <header class="board-header">
   <div class="header-grid">
-    <div class="brand">
-      <div class="brand-emblem" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L3 7v2h18V7l-9-5z" fill="#0A2620"/>
-          <rect x="4" y="10" width="16" height="9" rx="1" fill="#0A2620"/>
-          <path d="M9 19v-5h6v5" stroke="#F2F4EE" stroke-width="1" fill="none"/>
-          <circle cx="12" cy="6.4" r="1.1" fill="#F2F4EE"/>
-        </svg>
+    <div class="brand brand-left">
+      <div class="logo-slot" id="logoKemenag">
+        <img src="logo-kemenag.png" alt="Logo Kementerian Agama" onerror="this.parentElement.classList.add('fallback')">
+        <div class="logo-fallback">KEMENTERIAN<br>AGAMA</div>
       </div>
       <div class="brand-text">
-        <div class="brand-name">MAN Balikpapan</div>
-        <div class="brand-sub">Kota Balikpapan · Kalimantan Timur</div>
+        <div class="brand-name">Kementerian Agama</div>
+        <div class="brand-sub">Kota Balikpapan</div>
       </div>
     </div>
 
@@ -256,102 +207,36 @@
       <div class="agenda-line">Agenda Madrasah Hari Ini</div>
     </div>
 
-    <div class="clock-wrap">
-      <div class="clock-time" id="clockTime">--<span class="colon">:</span>--<span class="colon">:</span>--</div>
-      <div class="clock-date" id="clockDate">memuat tanggal…</div>
+    <div class="right-cluster">
+      <div class="clock-wrap">
+        <div class="clock-time" id="clockTime">--<span class="colon">:</span>--<span class="colon">:</span>--</div>
+        <div class="clock-date" id="clockDate">memuat tanggal…</div>
+      </div>
+      <div class="brand brand-right">
+        <div class="brand-text" style="text-align:right;">
+          <div class="brand-name">MAN Balikpapan</div>
+          <div class="brand-sub">Kalimantan Timur</div>
+        </div>
+        <div class="logo-slot" id="logoMadrasah">
+          <img src="logo-man.png" alt="Logo MAN Balikpapan" onerror="this.parentElement.classList.add('fallback')">
+          <div class="logo-fallback">MAN<br>BPP</div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
+<div class="prayer-bar" id="prayerBar">
+  <span class="label">Waktu Sholat · Balikpapan</span>
+  <span class="prayer-note">Memuat jadwal sholat…</span>
+</div>
+
 <main>
   <div class="section-intro">
     <h2>Bilik Informasi</h2>
-    <p>Setiap bilik menampung satu jenis konten — ganti data contoh dengan berkas asli madrasah sesuai kebutuhan.</p>
+    <p>Konten diperbarui otomatis oleh Admin dari dashboard pengelolaan.</p>
   </div>
-
-  <div class="bilik-grid" id="bilikGrid">
-
-    <article class="bilik" data-type="dokumen">
-      <span class="badge dokumen">Dokumen</span>
-      <h3>Bilik Pengumuman &amp; Edaran</h3>
-      <p class="fungsi">Surat edaran, pengumuman resmi, dan SK madrasah untuk siswa, guru, dan orang tua.</p>
-      <div class="preview">
-        <div class="preview-title">Berkas terbaru <span class="count">4 dok.</span></div>
-        <ul class="doc-list">
-          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Edaran_Libur_Akhir_Semester.pdf</span><span class="fdate">01 Agt</span></li>
-          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">SK_Panitia_PHBI.pdf</span><span class="fdate">28 Jul</span></li>
-        </ul>
-      </div>
-    </article>
-
-    <article class="bilik" data-type="dokumen">
-      <span class="badge dokumen">Dokumen</span>
-      <h3>Bilik Jadwal &amp; Agenda</h3>
-      <p class="fungsi">Jadwal pelajaran, agenda kegiatan harian, dan kalender akademik madrasah.</p>
-      <div class="preview">
-        <div class="preview-title">Agenda hari ini <span class="count">3 dok.</span></div>
-        <ul class="doc-list">
-          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Jadwal_Pelajaran_Ganjil.pdf</span><span class="fdate">Aktif</span></li>
-          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Kalender_Akademik_2026.pdf</span><span class="fdate">Aktif</span></li>
-        </ul>
-      </div>
-    </article>
-
-    <article class="bilik" data-type="video">
-      <span class="badge video">Video</span>
-      <h3>Bilik Video Profil &amp; Tausiyah</h3>
-      <p class="fungsi">Video profil madrasah, tausiyah singkat, dan tayangan edukatif.</p>
-      <div class="preview">
-        <div class="preview-title">Tayangan <span class="count">2 video</span></div>
-        <div class="video-box">
-          <div class="play"><svg viewBox="0 0 24 24" fill="#8A3B1F"><path d="M8 5v14l11-7z"/></svg></div>
-          <span class="dur">04:12</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="bilik" data-type="gambar">
-      <span class="badge gambar">Gambar</span>
-      <h3>Bilik Galeri Kegiatan</h3>
-      <p class="fungsi">Dokumentasi foto KBM, ekstrakurikuler, dan acara madrasah.</p>
-      <div class="preview">
-        <div class="preview-title">Foto terbaru <span class="count">18 foto</span></div>
-        <div class="thumb-row">
-          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg></div>
-          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg></div>
-          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="bilik" data-type="gambar">
-      <span class="badge gambar">Gambar</span>
-      <h3>Bilik Prestasi Siswa</h3>
-      <p class="fungsi">Foto piagam, piala, dan capaian siswa dalam berbagai lomba.</p>
-      <div class="preview">
-        <div class="preview-title">Prestasi terbaru <span class="count">7 foto</span></div>
-        <div class="thumb-row">
-          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.5 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
-          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.5 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
-          <div class="thumb"><svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.5 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="bilik" data-type="dokumen">
-      <span class="badge dokumen">Dokumen</span>
-      <h3>Bilik Berkas Unduhan</h3>
-      <p class="fungsi">Formulir, surat keterangan, dan berkas administrasi untuk siswa/wali.</p>
-      <div class="preview">
-        <div class="preview-title">Berkas tersedia <span class="count">6 dok.</span></div>
-        <ul class="doc-list">
-          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Formulir_Izin_Siswa.pdf</span><span class="fdate">Umum</span></li>
-          <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg><span class="fname">Surat_Keterangan_Aktif.pdf</span><span class="fdate">Umum</span></li>
-        </ul>
-      </div>
-    </article>
-
-  </div>
+  <div class="bilik-grid" id="bilikGrid"></div>
 </main>
 
 <footer class="marquee-bar" aria-label="Alamat madrasah berjalan">
@@ -361,8 +246,25 @@
   </div>
 </footer>
 
-<script>
-  // Jam digital real-time
+<div class="float-controls">
+  <button class="float-btn" id="btnFullscreen" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    Layar Penuh
+  </button>
+  <button class="float-btn" id="btnSound" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 0 1 0 7"/></svg>
+    Aktifkan Backsound
+  </button>
+</div>
+
+<!-- Ganti "backsound.mp3" dengan file audio pilihan Anda (letakkan di folder yang sama) -->
+<audio id="bgAudio" src="backsound.mp3" loop preload="none"></audio>
+
+<script type="module">
+  import { db } from './firebase-config.js';
+  import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  /* Jam digital real-time */
   function pad(n){ return n.toString().padStart(2,'0'); }
   function updateClock(){
     const now = new Date();
@@ -374,16 +276,122 @@
   updateClock();
   setInterval(updateClock, 1000);
 
-  // Sorotan otomatis bergilir antar bilik (pengganti interaksi klik untuk layar TV)
-  const cards = document.querySelectorAll('.bilik');
-  let idx = 0;
-  function cycleSpotlight(){
-    cards.forEach(c => c.classList.remove('active'));
-    if(cards.length){ cards[idx % cards.length].classList.add('active'); }
-    idx++;
+  /* Waktu sholat real-time — Balikpapan (metode perhitungan Kemenag RI) */
+  let prayerTimings = null;
+  async function loadPrayerTimes(){
+    try{
+      const now = new Date();
+      const d = pad(now.getDate()), m = pad(now.getMonth()+1), y = now.getFullYear();
+      const res = await fetch(`https://api.aladhan.com/v1/timingsByCity/${d}-${m}-${y}?city=Balikpapan&country=Indonesia&method=20`);
+      const data = await res.json();
+      const t = data.data.timings;
+      prayerTimings = [
+        {name:'Subuh', time:t.Fajr}, {name:'Dzuhur', time:t.Dhuhr},
+        {name:'Ashar', time:t.Asr}, {name:'Maghrib', time:t.Maghrib}, {name:'Isya', time:t.Isha}
+      ];
+      renderPrayerBar();
+    }catch(e){
+      document.getElementById('prayerBar').innerHTML = '<span class="label">Waktu Sholat · Balikpapan</span><span class="prayer-note">Jadwal tidak dapat dimuat (periksa koneksi internet).</span>';
+    }
   }
-  cycleSpotlight();
-  setInterval(cycleSpotlight, 5000);
+  function renderPrayerBar(){
+    if(!prayerTimings) return;
+    const now = new Date();
+    const nowMin = now.getHours()*60 + now.getMinutes();
+    let nextIdx = prayerTimings.findIndex(p => {
+      const [h,mn] = p.time.split(':').map(Number);
+      return (h*60+mn) > nowMin;
+    });
+    if(nextIdx === -1) nextIdx = 0; // sudah lewat Isya -> sorot Subuh berikutnya
+    const bar = document.getElementById('prayerBar');
+    bar.innerHTML = '<span class="label">Waktu Sholat · Balikpapan</span>' +
+      prayerTimings.map((p,i) =>
+        '<span class="prayer-item'+(i===nextIdx?' next':'')+'"><span class="pname">'+p.name+'</span><span class="ptime">'+p.time+'</span></span>'
+      ).join('');
+  }
+  loadPrayerTimes();
+  setInterval(renderPrayerBar, 30000);
+  setInterval(loadPrayerTimes, 6 * 60 * 60 * 1000); // muat ulang tiap 6 jam agar tanggal tetap akurat
+
+  /* Tombol layar penuh */
+  document.getElementById('btnFullscreen').addEventListener('click', () => {
+    if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); }
+    else{ document.exitFullscreen(); }
+  });
+
+  /* Backsound */
+  const bgAudio = document.getElementById('bgAudio');
+  const btnSound = document.getElementById('btnSound');
+  btnSound.addEventListener('click', () => {
+    if(bgAudio.paused){
+      bgAudio.play().then(()=>{ btnSound.lastChild.textContent = ' Matikan Backsound'; })
+        .catch(()=>{ alert('Tambahkan file backsound.mp3 pada folder yang sama dengan index.html.'); });
+    }else{
+      bgAudio.pause();
+      btnSound.lastChild.textContent = ' Aktifkan Backsound';
+    }
+  });
+
+  /* Konten bilik dari database (real-time) */
+  const docIconSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".85"/></svg>';
+  const imgIconSvg = '<svg viewBox="0 0 24 24" fill="#F2F4EE"><path d="M21 5H3v14h18V5zM8 11l2.5 3 3.5-4.5L18 15H6l2-4z"/></svg>';
+  function isYouTube(url){ return /youtube\.com|youtu\.be/.test(url || ''); }
+  function toYouTubeEmbed(url){ const m = url.match(/(?:v=|youtu\.be\/)([\w-]{6,})/); return m ? 'https://www.youtube.com/embed/' + m[1] : url; }
+  function fmtDate(ts){ if(!ts || !ts.toDate) return ''; return ts.toDate().toLocaleDateString('id-ID', { day:'2-digit', month:'short' }); }
+
+  function renderPreview(bilik, items){
+    if(!items.length){
+      return '<div class="preview"><div class="preview-title">'+bilik.name+'<span class="count">0</span></div><div class="empty-note">Belum ada konten. Admin dapat menambahkan lewat dashboard.</div></div>';
+    }
+    if(bilik.type === 'gambar'){
+      const shown = items.slice(0,3);
+      const thumbs = shown.map(it => '<div class="thumb">'+(it.url ? '<img src="'+it.url+'" alt="'+(it.title||'')+'">' : imgIconSvg)+'</div>').join('');
+      return '<div class="preview"><div class="preview-title">Foto terbaru <span class="count">'+items.length+' foto</span></div><div class="thumb-row">'+thumbs+'</div></div>';
+    }
+    if(bilik.type === 'video'){
+      const it = items[0];
+      const media = isYouTube(it.url) ? '<iframe src="'+toYouTubeEmbed(it.url)+'" allowfullscreen loading="lazy"></iframe>' : '<video src="'+it.url+'" muted loop autoplay playsinline></video>';
+      return '<div class="preview"><div class="preview-title">Tayangan <span class="count">'+items.length+' video</span></div><div class="video-item">'+media+'<div class="vlabel">'+(it.title||'')+'</div></div></div>';
+    }
+    const rows = items.slice(0,4).map(it => '<li><a href="'+it.url+'" target="_blank" rel="noopener">'+docIconSvg+'<span class="fname">'+(it.title||'Berkas')+'</span><span class="fdate">'+fmtDate(it.addedAt)+'</span></a></li>').join('');
+    return '<div class="preview"><div class="preview-title">Berkas <span class="count">'+items.length+' dok.</span></div><ul class="doc-list">'+rows+'</ul></div>';
+  }
+  function renderBilikCard(bilik, items){
+    return '<article class="bilik" data-id="'+bilik.id+'"><span class="badge '+bilik.type+'">'+bilik.type+'</span><h3>'+bilik.name+'</h3><p class="fungsi">'+(bilik.fungsi||'')+'</p>'+renderPreview(bilik, items)+'</article>';
+  }
+
+  const grid = document.getElementById('bilikGrid');
+  const bilikState = {};
+  let spotlightTimer = null;
+  function repaint(){
+    const ids = Object.keys(bilikState).sort((a,b)=> (bilikState[a].data.order||0) - (bilikState[b].data.order||0));
+    grid.innerHTML = ids.map(id => renderBilikCard(bilikState[id].data, bilikState[id].items)).join('');
+    if(!spotlightTimer){
+      let idx = 0;
+      spotlightTimer = setInterval(function(){
+        const cards = grid.querySelectorAll('.bilik');
+        cards.forEach(c=>c.classList.remove('active'));
+        if(cards.length){ cards[idx % cards.length].classList.add('active'); }
+        idx++;
+      }, 5000);
+    }
+  }
+
+  const q = query(collection(db, 'biliks'), orderBy('order'));
+  onSnapshot(q, (snap) => {
+    snap.docChanges().forEach(change => {
+      const id = change.doc.id;
+      if(change.type === 'removed'){ delete bilikState[id]; return; }
+      const data = { id, ...change.doc.data() };
+      if(!bilikState[id]) bilikState[id] = { data, items: [] };
+      else bilikState[id].data = data;
+      onSnapshot(query(collection(db, 'biliks', id, 'items'), orderBy('addedAt','desc')), (itemsSnap) => {
+        bilikState[id].items = itemsSnap.docs.map(d => ({ id:d.id, ...d.data() }));
+        repaint();
+      });
+    });
+    repaint();
+  });
 </script>
 
 </body>
