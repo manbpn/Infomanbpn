@@ -143,16 +143,55 @@
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="konten">Kelola Konten Bilik</button>
+    <button class="tab-btn" data-tab="infografis">Infografis &amp; Layanan</button>
+    <button class="tab-btn" data-tab="hikmah">Kata-kata Hikmah</button>
     <button class="tab-btn" data-tab="akun" id="tabAkunBtn" style="display:none;">Kelola Akun Admin</button>
   </div>
 
   <!-- TAB: KONTEN -->
   <div class="panel active" id="panelKonten">
     <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--ink-soft);">
-      <b>Urutan (order) menentukan posisi di layar TV:</b> bilik pertama = Slide besar, bilik-bilik di tengah (jumlah bebas) = kotak navigasi kecil (mis. Kampus 1/2/3), 2 bilik terakhir = panel Informasi &amp; Reward Siswa.<br>
-      <b>Isi konten:</b> kolom "Tautan URL" boleh diisi tautan foto/video/YouTube, tautan halaman web (akan tampil sebagai HTML), atau kode HTML langsung (diawali tanda <code>&lt;</code>).
+      <b>Nama bilik menentukan posisi di layar TV</b> — beri nama PERSIS: <code>Layar Utama</code> (Slide besar tengah) dan <code>Agenda Hari Ini</code> (panel kanan atas). Bilik lain di luar 2 nama ini tidak akan tampil di layar utama.<br>
+      <b>Isi konten:</b> kolom "Tautan URL" boleh diisi tautan foto/video/YouTube, tautan halaman web (tampil sebagai HTML), atau kode HTML langsung (diawali tanda <code>&lt;</code>).
     </div>
     <div id="bilikList"></div>
+  </div>
+
+  <!-- TAB: INFOGRAFIS & LAYANAN -->
+  <div class="panel" id="panelInfografis">
+    <div class="account-card">
+      <h3>Infografis Jumlah</h3>
+      <div class="add-admin-form" style="grid-template-columns:1fr 1fr 1fr;">
+        <input type="number" id="statGuru" placeholder="Jumlah Guru">
+        <input type="number" id="statTendik" placeholder="Jumlah Tenaga Kependidikan">
+        <input type="number" id="statSiswa" placeholder="Jumlah Siswa">
+      </div>
+    </div>
+    <div class="account-card">
+      <h3>Layanan (Telepon &amp; QR Code)</h3>
+      <div class="add-admin-form" style="grid-template-columns:1fr 1fr;">
+        <input type="text" id="svcTelepon" placeholder="Nomor Telepon, mis. 0542-8806219">
+        <input type="text" id="svcQrData" placeholder="Isi QR (link WA/Website), mis. https://wa.me/62...">
+      </div>
+      <p style="font-size:11.5px;color:var(--ink-soft);margin:8px 0 0;">QR code akan dibuat otomatis dari teks/tautan yang diisi — tidak perlu upload gambar QR.</p>
+    </div>
+    <button class="btn-small" id="btnSaveInfografis">Simpan Perubahan</button>
+  </div>
+
+  <!-- TAB: KATA-KATA HIKMAH -->
+  <div class="panel" id="panelHikmah">
+    <div class="account-card">
+      <h3>Tambah Kata-kata Hikmah</h3>
+      <div class="add-admin-form" style="grid-template-columns:2fr 1fr auto;">
+        <input type="text" id="hikmahText" placeholder="Isi kata-kata hikmah / kutipan">
+        <input type="text" id="hikmahAuthor" placeholder="Sumber (opsional)">
+        <button class="btn-small" id="btnAddHikmah">Tambah</button>
+      </div>
+    </div>
+    <div class="account-card">
+      <h3>Daftar Kata-kata Hikmah</h3>
+      <div id="hikmahList"></div>
+    </div>
   </div>
 
   <!-- TAB: AKUN (khusus admin utama) -->
@@ -172,6 +211,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="toast" id="toast"></div>
 
@@ -237,28 +277,22 @@
   });
 
   /* ---------------- TABS ---------------- */
+  const TAB_PANEL_MAP = { konten:'panelKonten', infografis:'panelInfografis', hikmah:'panelHikmah', akun:'panelAkun' };
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
       document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
       btn.classList.add('active');
-      $('#panel' + (btn.dataset.tab === 'konten' ? 'Konten' : 'Akun')).classList.add('active');
+      document.getElementById(TAB_PANEL_MAP[btn.dataset.tab]).classList.add('active');
     });
   });
 
   /* ---------------- KELOLA KONTEN BILIK ---------------- */
-  /* Urutan (order) menentukan posisi tampil di layar:
-     1 = Slide utama (area besar) | 2-6 = 5 kotak navigasi kecil | 7 = panel Informasi | 8 = panel Reward Siswa */
+  /* Bilik dicari berdasarkan NAMA persis oleh index.html — pastikan nama bilik persis:
+     "Layar Utama" (Slide besar, isi foto/video/HTML) dan "Agenda Hari Ini" (panel HTML kanan). */
   const DEFAULT_BILIKS = [
-    { name:'Slide', fungsi:'Slide utama: foto, video, atau HTML unggulan yang tampil besar.', type:'gambar', order:1 },
-    { name:'Ekskul Slide', fungsi:'Dokumentasi kegiatan ekstrakurikuler.', type:'gambar', order:2 },
-    { name:'Visi & Misi', fungsi:'Visi dan misi madrasah.', type:'gambar', order:3 },
-    { name:'SARPRAS', fungsi:'Sarana dan prasarana madrasah.', type:'gambar', order:4 },
-    { name:'Kampus 1', fungsi:'Lokasi Kampus 1 — Jl. Prapatan RT 26 No 10.', type:'gambar', order:5 },
-    { name:'Kampus 2', fungsi:'Lokasi Kampus 2 — Jl. Padat Karya Km 8,5.', type:'gambar', order:6 },
-    { name:'Kampus 3', fungsi:'Lokasi Kampus 3.', type:'gambar', order:7 },
-    { name:'Informasi', fungsi:'Pengumuman dan informasi umum (foto, video, HTML).', type:'gambar', order:8 },
-    { name:'Reward Siswa', fungsi:'Foto penghargaan dan prestasi siswa.', type:'gambar', order:9 }
+    { name:'Layar Utama', fungsi:'Slide utama: foto (PNG/JPG), video, atau HTML unggulan.', type:'gambar', order:1 },
+    { name:'Agenda Hari Ini', fungsi:'Jadwal kegiatan madrasah, format HTML.', type:'gambar', order:2 }
   ];
 
   async function loadBiliks(){
@@ -266,7 +300,7 @@
     onSnapshot(q, (snap) => {
       const list = $('#bilikList');
       if(snap.empty){
-        list.innerHTML = '<div class="empty-state">Belum ada data bilik.<br><br><button class="btn-small" id="btnSeed">Buat 9 Bilik Contoh</button></div>';
+        list.innerHTML = '<div class="empty-state">Belum ada data bilik.<br><br><button class="btn-small" id="btnSeed">Buat 2 Bilik Contoh</button></div>';
         const seedBtn = document.getElementById('btnSeed');
         if(seedBtn) seedBtn.addEventListener('click', seedBiliks);
         return;
@@ -415,6 +449,73 @@
     }catch(err){
       console.error(err);
       toast('Gagal membuat akun: ' + err.message);
+    }
+  });
+
+  /* ---------------- INFOGRAFIS & LAYANAN (settings/general) ---------------- */
+  (async function loadInfografisSettings(){
+    try{
+      const snap = await getDoc(doc(db, 'settings', 'general'));
+      if(snap.exists()){
+        const s = snap.data();
+        $('#statGuru').value = s.guru ?? '';
+        $('#statTendik').value = s.tendik ?? '';
+        $('#statSiswa').value = s.siswa ?? '';
+        $('#svcTelepon').value = s.telepon ?? '';
+        $('#svcQrData').value = s.qrData ?? '';
+      }
+    }catch(err){ console.error(err); }
+  })();
+
+  $('#btnSaveInfografis').addEventListener('click', async () => {
+    try{
+      await setDoc(doc(db, 'settings', 'general'), {
+        guru: Number($('#statGuru').value) || 0,
+        tendik: Number($('#statTendik').value) || 0,
+        siswa: Number($('#statSiswa').value) || 0,
+        telepon: $('#svcTelepon').value.trim(),
+        qrData: $('#svcQrData').value.trim(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      toast('Infografis & Layanan berhasil disimpan.');
+    }catch(err){
+      console.error(err);
+      toast('Gagal menyimpan: ' + err.message);
+    }
+  });
+
+  /* ---------------- KATA-KATA HIKMAH ---------------- */
+  onSnapshot(query(collection(db, 'quotes'), orderBy('order')), (snap) => {
+    const box = $('#hikmahList');
+    if(snap.empty){ box.innerHTML = '<p style="font-size:12.5px;color:var(--ink-soft);">Belum ada kata-kata hikmah.</p>'; return; }
+    box.innerHTML = '';
+    snap.forEach(d => {
+      const q = d.data();
+      const row = document.createElement('div');
+      row.className = 'acc-row';
+      row.innerHTML = '<span class="acc-email" style="flex:1;">&ldquo;'+(q.text||'')+'&rdquo;'+(q.author?' — '+q.author:'')+'</span>' +
+        '<button class="icon-btn danger" data-del="'+d.id+'">Hapus</button>';
+      row.querySelector('[data-del]').addEventListener('click', async () => {
+        if(confirm('Hapus kata-kata hikmah ini?')){
+          await deleteDoc(doc(db, 'quotes', d.id));
+          toast('Kata-kata hikmah dihapus.');
+        }
+      });
+      box.appendChild(row);
+    });
+  });
+
+  $('#btnAddHikmah').addEventListener('click', async () => {
+    const text = $('#hikmahText').value.trim();
+    const author = $('#hikmahAuthor').value.trim();
+    if(!text){ toast('Isi kata-kata hikmah terlebih dahulu.'); return; }
+    try{
+      await addDoc(collection(db, 'quotes'), { text, author, order: Date.now() });
+      $('#hikmahText').value=''; $('#hikmahAuthor').value='';
+      toast('Kata-kata hikmah ditambahkan.');
+    }catch(err){
+      console.error(err);
+      toast('Gagal menambah: ' + err.message);
     }
   });
 </script>

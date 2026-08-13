@@ -13,7 +13,7 @@
     --emerald-700:#186552; --emerald-600:#1F8267;
     --gold-500:#C9A227; --gold-400:#DDBE55; --gold-200:#F0DFA0; --gold-800:#8a6d16;
     --paper:#F2F4EE; --paper-card:#FFFFFF; --ink:#12211C; --ink-soft:#4A5C55; --line:#DCE3D9;
-    --bottom-row-h: clamp(78px,12vh,116px);
+    --hikmah-border:#E3B788;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;width:100%;}
@@ -32,7 +32,7 @@
     background: radial-gradient(circle at 15% 20%, rgba(201,162,39,0.10), transparent 40%),
       radial-gradient(circle at 85% 80%, rgba(201,162,39,0.08), transparent 45%),
       linear-gradient(160deg, var(--emerald-950), var(--emerald-800));
-    color:#fff; padding:clamp(12px,1.8vh,20px) clamp(16px,2.4vw,34px);
+    color:#fff; padding:clamp(10px,1.6vh,18px) clamp(16px,2.4vw,34px);
     overflow:hidden; border-bottom:4px solid var(--gold-500);
   }
   header.board-header::before{
@@ -46,7 +46,7 @@
   .brand{ display:flex; align-items:center; gap:10px; }
   .header-grid > .brand-left{ justify-self:start; }
   .right-cluster{ justify-self:end; display:flex; align-items:center; gap:20px; }
-  .logo-slot{ position:relative; width:clamp(38px,5.4vh,54px); height:clamp(38px,5.4vh,54px); flex:none; }
+  .logo-slot{ position:relative; width:clamp(36px,5vh,50px); height:clamp(36px,5vh,50px); flex:none; }
   .logo-slot img{ width:100%; height:100%; object-fit:contain; border-radius:8px; display:block; }
   .logo-slot .logo-fallback{
     display:none; width:100%; height:100%; border-radius:50%; align-items:center; justify-content:center;
@@ -56,42 +56,79 @@
   }
   .logo-slot.fallback img{ display:none; } .logo-slot.fallback .logo-fallback{ display:flex; }
   .brand-text{line-height:1.2;}
-  .brand-text .brand-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:clamp(12px,1.7vh,15px); }
-  .brand-text .brand-sub{ font-size:clamp(9px,1.2vh,11.5px); color:var(--gold-200); font-weight:500; margin-top:2px; }
+  .brand-text .brand-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:clamp(11px,1.6vh,14px); }
+  .brand-text .brand-sub{ font-size:clamp(9px,1.1vh,11px); color:var(--gold-200); font-weight:500; margin-top:2px; }
   .title-block{text-align:center;}
-  .title-block .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.2vh,11px); letter-spacing:3px; color:var(--gold-400); text-transform:uppercase; }
-  .title-block h1{ font-family:'Sora', sans-serif; font-weight:800; font-size:clamp(18px,3.8vh,34px); letter-spacing:1px; margin:2px 0 6px; }
-  .title-rule{ width:100px; height:2px; margin:0 auto 8px; background:linear-gradient(90deg, transparent, var(--gold-500), transparent); }
-  .title-block .agenda-line{ font-size:clamp(11px,1.7vh,14px); color:var(--gold-200); font-weight:600; }
+  .title-block .eyebrow{ font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.1vh,11px); letter-spacing:3px; color:var(--gold-400); text-transform:uppercase; }
+  .title-block h1{ font-family:'Sora', sans-serif; font-weight:800; font-size:clamp(16px,3.2vh,30px); letter-spacing:1px; margin:2px 0 5px; }
+  .title-rule{ width:90px; height:2px; margin:0 auto 6px; background:linear-gradient(90deg, transparent, var(--gold-500), transparent); }
+  .title-block .agenda-line{ font-size:clamp(10px,1.5vh,13px); color:var(--gold-200); font-weight:600; }
   .clock-wrap{ display:flex; flex-direction:column; align-items:flex-end; text-align:right; }
-  .clock-time{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:clamp(16px,3.4vh,28px); color:var(--gold-200); letter-spacing:1px; text-shadow:0 0 14px rgba(221,190,85,0.35); font-variant-numeric:tabular-nums; }
+  .clock-time{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:clamp(14px,2.8vh,24px); color:var(--gold-200); letter-spacing:1px; text-shadow:0 0 14px rgba(221,190,85,0.35); font-variant-numeric:tabular-nums; }
   .clock-time .colon{ animation: blink 1s steps(1) infinite; }
   @keyframes blink{ 50%{ opacity:0.25; } }
-  .clock-date{ font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.3vh,11px); color:rgba(255,255,255,0.75); margin-top:2px; text-transform:capitalize; }
+  .clock-date{ font-family:'JetBrains Mono', monospace; font-size:clamp(8px,1.1vh,10px); color:rgba(255,255,255,0.75); margin-top:2px; text-transform:capitalize; }
   @media (max-width:820px){
     .header-grid{grid-template-columns:1fr; text-align:center;}
     .brand{justify-content:center;} .right-cluster{justify-self:center; flex-wrap:wrap; justify-content:center;}
     .clock-wrap{align-items:center;text-align:center;}
   }
 
-  /* ---------- MAIN STAGE LAYOUT ---------- */
+  /* ---------- WAKTU SHOLAT (full width, di bawah header) ---------- */
+  .prayer-bar{
+    flex:0 0 auto; display:flex; align-items:center; gap:clamp(8px,1.4vw,18px);
+    background:var(--emerald-900); border-bottom:2px solid var(--gold-500);
+    padding:clamp(6px,1vh,10px) clamp(16px,2.4vw,34px); overflow-x:auto; white-space:nowrap;
+  }
+  .prayer-bar .label{ font-family:'JetBrains Mono', monospace; font-size:clamp(9px,1.2vh,11px); letter-spacing:1px; text-transform:uppercase; color:var(--gold-400); flex:none; font-weight:700; }
+  .prayer-item{ display:inline-flex; align-items:center; gap:6px; font-size:clamp(11px,1.4vh,13px); color:rgba(255,255,255,0.85); padding:3px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); }
+  .prayer-item .pname{ font-weight:600; }
+  .prayer-item .ptime{ font-family:'JetBrains Mono', monospace; color:var(--gold-200); }
+  .prayer-item.next{ background:rgba(201,162,39,0.22); border-color:var(--gold-500); }
+  .prayer-note{ font-size:11.5px; color:rgba(255,255,255,0.6); font-style:italic; }
+
+  /* ---------- MAIN 3 KOLOM ---------- */
   main.board-main{
     flex:1 1 auto; min-height:0; display:grid;
-    grid-template-columns: 1fr minmax(220px, 30%);
-    grid-template-rows: 1fr var(--bottom-row-h);
+    grid-template-columns: minmax(220px,25%) 1fr minmax(230px,26%);
     gap: clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);
     padding: clamp(12px,1.8vh,20px) clamp(14px,2.4vw,30px);
   }
   @media (max-width:900px){
-    main.board-main{ grid-template-columns:1fr; grid-template-rows:auto auto auto auto; overflow-y:auto; }
+    main.board-main{ grid-template-columns:1fr; overflow-y:auto; }
+    .hero-panel{ min-height:280px; }
   }
 
-  .section-tag{ font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold-500); font-weight:700; }
+  /* Kolom kiri: Infografis Jumlah + Kata-kata Hikmah */
+  .col-left{ grid-column:1; display:flex; flex-direction:column; gap:clamp(10px,1.6vh,16px); min-height:0; }
+  .stats-box{
+    flex:0 0 auto; background:var(--paper-card); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; box-shadow:0 8px 20px -10px rgba(10,38,32,0.2);
+  }
+  .stats-box h4{ font-family:'Sora', sans-serif; font-size:clamp(12px,1.5vh,14px); font-weight:700; margin:0 0 10px; color:var(--emerald-800); text-align:center; }
+  .stats-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .stats-list li{ display:flex; align-items:center; justify-content:space-between; font-size:clamp(11px,1.4vh,13px); border-bottom:1px dashed var(--line); padding-bottom:6px; }
+  .stats-list li .k{ color:var(--ink-soft); font-weight:600; }
+  .stats-list li .v{ font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--emerald-800); font-size:1.1em; }
 
-  /* Hero (Slide) */
+  .quote-card{
+    flex:1; min-height:0; position:relative; background:var(--paper-card);
+    border:5px solid var(--hikmah-border); border-radius:22px; overflow:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    padding:34px 18px 18px; box-shadow:0 8px 20px -10px rgba(10,38,32,0.2);
+  }
+  .quote-card::before{
+    content:""; position:absolute; top:6px; left:0; right:0; height:22px;
+    background-image: radial-gradient(circle, #3a2c1f 42%, transparent 43%);
+    background-size:22px 22px; background-repeat:repeat-x; background-position:center; opacity:0.85;
+  }
+  .quote-card .q-label{ font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold-800); font-weight:700; margin-bottom:10px; }
+  .quote-card .q-text{ font-family:'Sora', sans-serif; font-weight:600; font-style:italic; font-size:clamp(12px,1.6vh,15px); color:var(--ink); line-height:1.5; }
+  .quote-card .q-author{ margin-top:10px; font-size:11px; color:var(--ink-soft); }
+
+  /* Kolom tengah: Layar Utama (Slide) — penuh tinggi, tanpa ruang kosong */
   .hero-panel{
-    grid-column:1; grid-row:1;
-    position:relative; min-height:0; border-radius:18px; overflow:hidden;
+    grid-column:2; position:relative; min-height:0; border-radius:18px; overflow:hidden;
     background:linear-gradient(135deg,#e8eae4,#ffffff);
     box-shadow:0 12px 30px -14px rgba(10,38,32,0.3);
     display:flex; align-items:center; justify-content:center;
@@ -103,82 +140,36 @@
     position:absolute; left:0; right:0; bottom:0; z-index:2;
     background:linear-gradient(0deg, rgba(10,38,32,0.85), transparent);
     color:#fff; padding:26px 22px 14px; font-size:clamp(12px,1.6vh,15px); font-weight:600;
-  }
-  .hero-panel .caption .doc-icon-badge{
-    display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.14); padding:4px 10px; border-radius:999px; font-size:11px; margin-bottom:4px;
-  }
-  .hero-panel .caption, .side-panel .panel-caption{
     overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; white-space:normal;
   }
 
-  /* Thumbnail strip */
-  .thumb-strip{
-    grid-column:1; grid-row:2; height:var(--bottom-row-h);
-    display:flex; gap:clamp(8px,1vw,12px); padding:8px; border-radius:14px;
-    background:linear-gradient(90deg, var(--gold-500), var(--gold-400));
-    overflow-x:auto;
-  }
-  .thumb-card{ flex:1 0 clamp(120px,14vw,180px); min-width:clamp(120px,14vw,180px); }
-  .thumb-card{
-    flex:1; min-width:0; position:relative; border-radius:10px; overflow:hidden;
-    background:linear-gradient(135deg, var(--emerald-600), var(--emerald-900));
-    transition:transform .4s ease, box-shadow .4s ease;
-  }
-  .thumb-card img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.55; }
-  .thumb-card .t-overlay{
-    position:relative; z-index:1; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:4px 6px; color:#fff;
-  }
-  .thumb-card .t-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:clamp(9.5px,1.1vw,12px); line-height:1.2; }
-  .thumb-card .t-type{ font-family:'JetBrains Mono', monospace; font-size:9px; opacity:0.8; margin-top:2px; }
-  .thumb-card.active{ transform:translateY(-4px); box-shadow:0 10px 20px -8px rgba(201,162,39,0.6); }
-  .thumb-card.active::after{ content:""; position:absolute; inset:0; border:2px solid var(--gold-400); border-radius:10px; }
-
-  /* Side column: Informasi + Reward */
-  .side-col{ grid-column:2; grid-row:1; display:flex; flex-direction:column; gap:clamp(10px,1.6vh,16px); min-height:0; }
-  .side-panel{
+  /* Kolom kanan: Agenda Hari Ini (HTML) + Layanan */
+  .col-right{ grid-column:3; display:flex; flex-direction:column; gap:clamp(10px,1.6vh,16px); min-height:0; }
+  .agenda-panel{
     flex:1; min-height:0; position:relative; border-radius:16px; overflow:hidden;
-    display:flex; align-items:center; justify-content:center; color:#fff; text-align:center;
-    box-shadow:0 10px 24px -12px rgba(10,38,32,0.3);
+    background:linear-gradient(135deg, var(--emerald-600), var(--emerald-950));
+    box-shadow:0 10px 24px -12px rgba(10,38,32,0.3); color:#fff;
+    display:flex; align-items:center; justify-content:center; text-align:center;
   }
-  .side-panel.info-panel{ background:linear-gradient(135deg, var(--emerald-600), var(--emerald-950)); }
-  .side-panel.reward-panel{ background:linear-gradient(135deg, var(--gold-400), var(--gold-800)); }
-  .side-panel img, .side-panel video, .side-panel iframe{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border:0; display:block; opacity:0.9; }
-  .side-panel .panel-label{
-    position:relative; z-index:1; padding:14px; font-family:'Sora', sans-serif; font-weight:700; font-size:clamp(13px,1.7vh,17px);
-  }
-  .side-panel .panel-label .sub{ display:block; font-family:'Plus Jakarta Sans', sans-serif; font-weight:500; font-size:clamp(10px,1.2vh,12px); opacity:0.85; margin-top:4px; }
-  .side-panel .panel-caption{
-    position:absolute; left:0; right:0; bottom:0; z-index:2; text-align:left;
-    background:linear-gradient(0deg, rgba(0,0,0,0.55), transparent); padding:16px 14px 8px;
-    font-size:clamp(10px,1.2vh,12px); font-weight:600;
-  }
+  .agenda-panel img, .agenda-panel video, .agenda-panel iframe{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border:0; display:block; background:#fff; }
+  .agenda-panel .panel-label{ position:relative; z-index:1; padding:14px; font-family:'Sora', sans-serif; font-weight:700; font-size:clamp(13px,1.7vh,17px); }
+  .agenda-panel .panel-label .sub{ display:block; font-family:'Plus Jakarta Sans', sans-serif; font-weight:500; font-size:clamp(10px,1.2vh,12px); opacity:0.85; margin-top:4px; }
+  .agenda-panel .badge-html{ position:absolute; top:8px; right:10px; font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:1px; background:rgba(0,0,0,0.4); padding:3px 8px; border-radius:999px; z-index:2; }
 
-  /* Prayer bar (compact, side column) */
-  .prayer-bar{
-    grid-column:2; grid-row:2; height:var(--bottom-row-h);
-    background:var(--emerald-900); border:1px solid var(--emerald-700); border-radius:12px;
-    padding:8px 10px; display:flex; flex-direction:column; gap:4px; justify-content:center; overflow:hidden;
+  .services-box{
+    flex:0 0 auto; background:var(--emerald-900); border:1px solid var(--emerald-700); border-radius:14px;
+    padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:#fff;
   }
-  .prayer-bar .label{
-    font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:1px; text-transform:uppercase; color:var(--gold-400); font-weight:700;
-  }
-  .prayer-items-row{ display:flex; flex-wrap:wrap; gap:4px; }
-  .prayer-item{
-    display:inline-flex; align-items:center; gap:4px; font-size:10px; color:rgba(255,255,255,0.85);
-    padding:2px 7px; border-radius:999px; border:1px solid rgba(255,255,255,0.14);
-  }
-  .prayer-item .pname{ font-weight:600; }
-  .prayer-item .ptime{ font-family:'JetBrains Mono', monospace; color:var(--gold-200); }
-  .prayer-item.next{ background:rgba(201,162,39,0.22); border-color:var(--gold-500); }
-  .prayer-note{ font-size:10.5px; color:rgba(255,255,255,0.6); font-style:italic; }
+  .services-clock .s-time{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:clamp(15px,2vh,19px); color:var(--gold-200); }
+  .services-clock .s-date{ font-family:'JetBrains Mono', monospace; font-size:9.5px; color:rgba(255,255,255,0.7); margin-top:2px; }
+  .services-phone{ font-size:11px; color:var(--gold-200); margin-top:6px; font-weight:600; }
+  .services-qr{ text-align:center; flex:none; }
+  .services-qr img{ width:64px; height:64px; border-radius:6px; background:#fff; padding:3px; }
+  .services-qr .lbl{ font-size:9px; color:rgba(255,255,255,0.65); margin-top:4px; }
 
   /* ---------- FOOTER ---------- */
-  footer.marquee-bar{
-    flex:0 0 auto; background:linear-gradient(90deg, var(--emerald-950), var(--emerald-800));
-    border-top:3px solid var(--gold-500); overflow:hidden; padding:6px 0 9px;
-  }
-  .marquee-track{ display:inline-flex; white-space:nowrap; animation: scroll-left 24s linear infinite; }
+  footer.marquee-bar{ flex:0 0 auto; background:linear-gradient(90deg, var(--emerald-950), var(--emerald-800)); border-top:3px solid var(--gold-500); overflow:hidden; padding:8px 0; white-space:nowrap; }
+  .marquee-track{ display:inline-flex; animation: scroll-left 24s linear infinite; }
   .marquee-track span{ display:inline-flex; align-items:center; gap:10px; padding-right:60px; font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:500; color:var(--gold-200); letter-spacing:0.4px; }
   .marquee-track span::before{ content:"●"; color:var(--gold-500); font-size:8px; }
   footer.marquee-bar:hover .marquee-track{ animation-play-state:paused; }
@@ -189,7 +180,7 @@
   }
 
   /* ---------- FLOATING CONTROLS ---------- */
-  .float-controls{ position:fixed; right:14px; bottom:64px; display:flex; flex-direction:column; gap:8px; z-index:40; }
+  .float-controls{ position:fixed; left:14px; bottom:14px; display:flex; flex-direction:column; gap:8px; z-index:40; }
   .float-btn{
     display:flex; align-items:center; gap:6px; font-family:'Plus Jakarta Sans', sans-serif; font-size:11.5px; font-weight:600;
     background:rgba(10,38,32,0.75); color:#fff; border:1px solid rgba(255,255,255,0.25); border-radius:999px;
@@ -240,22 +231,47 @@
   </div>
 </header>
 
+<div class="prayer-bar" id="prayerBar">
+  <span class="label">Waktu Sholat · Balikpapan</span>
+  <span class="prayer-note">Memuat jadwal sholat…</span>
+</div>
+
 <main class="board-main">
+  <div class="col-left">
+    <div class="stats-box">
+      <h4>Infografis Jumlah</h4>
+      <ul class="stats-list" id="statsList">
+        <li><span class="k">Guru</span><span class="v">—</span></li>
+        <li><span class="k">Tenaga Kependidikan</span><span class="v">—</span></li>
+        <li><span class="k">Siswa</span><span class="v">—</span></li>
+      </ul>
+    </div>
+    <div class="quote-card" id="quoteCard">
+      <div class="q-label">Kata-kata Hikmah</div>
+      <div class="q-text">Menuntut ilmu adalah kewajiban bagi setiap muslim.</div>
+    </div>
+  </div>
+
   <div class="hero-panel" id="heroPanel">
-    <div class="empty-msg"><div class="big">Slide</div>Foto, Video, PDF akan tampil di sini</div>
+    <div class="empty-msg"><div class="big">Layar Utama</div>Slide format foto (PNG/JPG), video, atau HTML akan tampil di sini</div>
   </div>
-  <div class="thumb-strip" id="thumbStrip"></div>
-  <div class="side-col">
-    <div class="side-panel info-panel" id="infoPanel">
-      <div class="panel-label">Informasi<span class="sub">Foto, PDF</span></div>
+
+  <div class="col-right">
+    <div class="agenda-panel" id="agendaPanel">
+      <span class="badge-html">FORMAT HTML</span>
+      <div class="panel-label">Agenda Hari Ini<span class="sub">berisi jadwal kegiatan Madrasah</span></div>
     </div>
-    <div class="side-panel reward-panel" id="rewardPanel">
-      <div class="panel-label">Reward Siswa<span class="sub">Foto</span></div>
+    <div class="services-box">
+      <div class="services-clock">
+        <div class="s-time" id="svcClockTime">--:--:--</div>
+        <div class="s-date" id="svcClockDate">memuat…</div>
+        <div class="services-phone" id="svcPhone">Telp: —</div>
+      </div>
+      <div class="services-qr">
+        <img id="svcQr" src="" alt="QR Layanan" style="display:none;">
+        <div class="lbl">Layanan</div>
+      </div>
     </div>
-  </div>
-  <div class="prayer-bar" id="prayerBar">
-    <span class="label">Waktu Sholat · Balikpapan</span>
-    <span class="prayer-note">Memuat jadwal sholat…</span>
   </div>
 </main>
 
@@ -280,18 +296,21 @@
 
 <script type="module">
   import { db } from './firebase-config.js';
-  import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { collection, query, orderBy, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   function pad(n){ return n.toString().padStart(2,'0'); }
   function updateClock(){
     const now = new Date();
-    document.getElementById('clockTime').innerHTML =
-      pad(now.getHours()) + '<span class="colon">:</span>' + pad(now.getMinutes()) + '<span class="colon">:</span>' + pad(now.getSeconds());
-    document.getElementById('clockDate').textContent =
-      now.toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+    const timeHtml = pad(now.getHours()) + '<span class="colon">:</span>' + pad(now.getMinutes()) + '<span class="colon">:</span>' + pad(now.getSeconds());
+    const dateStr = now.toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+    document.getElementById('clockTime').innerHTML = timeHtml;
+    document.getElementById('clockDate').textContent = dateStr;
+    document.getElementById('svcClockTime').textContent = pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+    document.getElementById('svcClockDate').textContent = now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
   }
   updateClock(); setInterval(updateClock, 1000);
 
+  /* Waktu Sholat */
   let prayerTimings = null;
   async function loadPrayerTimes(){
     try{
@@ -315,9 +334,8 @@
     let nextIdx = prayerTimings.findIndex(p => { const [h,mn]=p.time.split(':').map(Number); return (h*60+mn)>nowMin; });
     if(nextIdx===-1) nextIdx=0;
     document.getElementById('prayerBar').innerHTML =
-      '<span class="label">Waktu Sholat · Balikpapan</span><div class="prayer-items-row">' +
-      prayerTimings.map((p,i)=>'<span class="prayer-item'+(i===nextIdx?' next':'')+'"><span class="pname">'+p.name+'</span><span class="ptime">'+p.time+'</span></span>').join('') +
-      '</div>';
+      '<span class="label">Waktu Sholat · Balikpapan</span>' +
+      prayerTimings.map((p,i)=>'<span class="prayer-item'+(i===nextIdx?' next':'')+'"><span class="pname">'+p.name+'</span><span class="ptime">'+p.time+'</span></span>').join('');
   }
   loadPrayerTimes(); setInterval(renderPrayerBar, 30000); setInterval(loadPrayerTimes, 6*60*60*1000);
 
@@ -340,19 +358,16 @@
   function isImage(url){ return /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(url||''); }
   function isVideoFile(url){ return /\.(mp4|webm|mov)(\?|$)/i.test(url||''); }
   function isRawHtml(str){ return /^\s*</.test(str||''); }
-
-  /* Merender item sebagai Foto, Video, atau HTML (halaman web / kode HTML) */
   function mediaHtml(item){
     if(!item || !item.url) return '';
     const v = item.url;
     if(isImage(v)) return '<img src="'+v+'" alt="'+(item.title||'')+'">';
     if(isYouTube(v)) return '<iframe src="'+toYouTubeEmbed(v)+'" allowfullscreen loading="lazy"></iframe>';
     if(isVideoFile(v)) return '<video src="'+v+'" muted loop autoplay playsinline></video>';
-    if(isRawHtml(v)) return '<iframe srcdoc="'+v.replace(/"/g,'&quot;')+'" loading="lazy"></iframe>'; // kode HTML langsung
-    return '<iframe src="'+v+'" loading="lazy"></iframe>'; // tautan halaman web / embed lain
+    if(isRawHtml(v)) return '<iframe srcdoc="'+v.replace(/"/g,'&quot;')+'" loading="lazy"></iframe>';
+    return '<iframe src="'+v+'" loading="lazy"></iframe>';
   }
 
-  /* ---------- Panel cycling (Hero, Informasi, Reward) ---------- */
   function setupCyclingPanel(panelEl, bilikGetter, opts){
     let idx = 0;
     function render(){
@@ -369,59 +384,28 @@
     setInterval(render, opts.interval || 7000);
   }
 
-  const bilikState = {}; // id -> {data, items}
-  let orderedIds = [];
-
-  /* Bilik pertama = Slide (hero). Dua bilik TERAKHIR = Informasi & Reward Siswa.
-     Sisanya di tengah (jumlah bebas) = kotak navigasi kecil (Kampus 1/2/3, dst). */
-  function heroState(){ const id = orderedIds[0]; return id ? bilikState[id] : null; }
-  function infoState(){ const id = orderedIds[orderedIds.length-2]; return id ? bilikState[id] : null; }
-  function rewardState(){ const id = orderedIds[orderedIds.length-1]; return id ? bilikState[id] : null; }
+  /* Bilik dicari berdasarkan NAMA persis, bukan urutan — cari bilik "Layar Utama" dan "Agenda Hari Ini" */
+  const bilikState = {};
+  function findByName(name){
+    const id = Object.keys(bilikState).find(k => (bilikState[k].data.name||'').trim().toLowerCase() === name.toLowerCase());
+    return id ? bilikState[id] : null;
+  }
+  function heroState(){ return findByName('Layar Utama') || findByName('Slide'); }
+  function agendaState(){ return findByName('Agenda Hari Ini') || findByName('Agenda'); }
 
   let panelsInitialized = false;
   function initPanelsOnce(){
     if(panelsInitialized) return; panelsInitialized = true;
     setupCyclingPanel(document.getElementById('heroPanel'), heroState, {
       interval: 8000,
-      emptyHtml: (data) => '<div class="empty-msg"><div class="big">'+(data?data.name:'Slide')+'</div>'+(data?data.fungsi:'Foto, Video, atau HTML akan tampil di sini')+'</div>',
+      emptyHtml: (data) => '<div class="empty-msg"><div class="big">'+(data?data.name:'Layar Utama')+'</div>'+(data?data.fungsi:'Slide format foto, video, atau HTML akan tampil di sini')+'</div>',
       captionHtml: (data, item) => '<div class="caption">'+(data.name||'')+' &middot; '+(item.title||'')+'</div>'
     });
-    setupCyclingPanel(document.getElementById('infoPanel'), infoState, {
+    setupCyclingPanel(document.getElementById('agendaPanel'), agendaState, {
       interval: 9000,
-      emptyHtml: (data) => '<div class="panel-label">'+(data?data.name:'Informasi')+'<span class="sub">'+(data?data.fungsi:'Foto, Video, HTML')+'</span></div>',
-      captionHtml: (data, item) => '<div class="panel-caption">'+(item.title||data.name||'')+'</div>'
+      emptyHtml: (data) => '<span class="badge-html">FORMAT HTML</span><div class="panel-label">'+(data?data.name:'Agenda Hari Ini')+'<span class="sub">'+(data?data.fungsi:'berisi jadwal kegiatan Madrasah')+'</span></div>',
+      captionHtml: () => ''
     });
-    setupCyclingPanel(document.getElementById('rewardPanel'), rewardState, {
-      interval: 9500,
-      emptyHtml: (data) => '<div class="panel-label">'+(data?data.name:'Reward Siswa')+'<span class="sub">'+(data?data.fungsi:'Foto')+'</span></div>',
-      captionHtml: (data, item) => '<div class="panel-caption">'+(item.title||data.name||'')+'</div>'
-    });
-  }
-
-  function repaintThumbs(){
-    const thumbIds = orderedIds.slice(1, orderedIds.length-2); // jumlah fleksibel, tidak dibatasi 5
-    const strip = document.getElementById('thumbStrip');
-    strip.innerHTML = thumbIds.map((id) => {
-      const st = bilikState[id]; if(!st) return '';
-      const firstImg = (st.items||[]).find(it => isImage(it.url));
-      return '<div class="thumb-card" data-id="'+id+'">' +
-        (firstImg ? '<img src="'+firstImg.url+'" alt="">' : '') +
-        '<div class="t-overlay"><div class="t-name">'+st.data.name+'</div><div class="t-type">'+(st.data.type||'').toUpperCase()+' &middot; '+(st.items?st.items.length:0)+'</div></div>' +
-        '</div>';
-    }).join('');
-  }
-
-  let spotlightTimer = null;
-  function startThumbSpotlight(){
-    if(spotlightTimer) return;
-    let i = 0;
-    spotlightTimer = setInterval(() => {
-      const cards = document.querySelectorAll('.thumb-card');
-      if(!cards.length) return;
-      cards.forEach(c=>c.classList.remove('active'));
-      cards[i % cards.length].classList.add('active');
-      i++;
-    }, 4000);
   }
 
   const q = query(collection(db, 'biliks'), orderBy('order'));
@@ -436,11 +420,46 @@
         bilikState[id].items = itemsSnap.docs.map(d => ({ id:d.id, ...d.data() }));
       });
     });
-    orderedIds = Object.keys(bilikState).sort((a,b)=> (bilikState[a].data.order||0) - (bilikState[b].data.order||0));
     initPanelsOnce();
-    repaintThumbs();
-    startThumbSpotlight();
   });
+
+  /* ---------- Infografis Jumlah + Layanan (settings/general) ---------- */
+  onSnapshot(doc(db, 'settings', 'general'), (snap) => {
+    const s = snap.exists() ? snap.data() : {};
+    document.getElementById('statsList').innerHTML =
+      '<li><span class="k">Guru</span><span class="v">'+(s.guru ?? '—')+'</span></li>' +
+      '<li><span class="k">Tenaga Kependidikan</span><span class="v">'+(s.tendik ?? '—')+'</span></li>' +
+      '<li><span class="k">Siswa</span><span class="v">'+(s.siswa ?? '—')+'</span></li>';
+
+    document.getElementById('svcPhone').textContent = 'Telp: ' + (s.telepon || '—');
+
+    const qrImg = document.getElementById('svcQr');
+    if(s.qrData){
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(s.qrData);
+      qrImg.style.display = 'block';
+    }else{
+      qrImg.style.display = 'none';
+    }
+  });
+
+  /* ---------- Kata-kata Hikmah (cycling) ---------- */
+  let quotes = [];
+  let quoteIdx = 0;
+  function renderQuote(){
+    const box = document.getElementById('quoteCard');
+    if(!quotes.length){
+      box.innerHTML = '<div class="q-label">Kata-kata Hikmah</div><div class="q-text">Menuntut ilmu adalah kewajiban bagi setiap muslim.</div>';
+      return;
+    }
+    const q = quotes[quoteIdx % quotes.length]; quoteIdx++;
+    box.innerHTML = '<div class="q-label">Kata-kata Hikmah</div><div class="q-text">&ldquo;'+(q.text||'')+'&rdquo;</div>' +
+      (q.author ? '<div class="q-author">— '+q.author+'</div>' : '');
+  }
+  onSnapshot(query(collection(db, 'quotes'), orderBy('order')), (snap) => {
+    quotes = snap.docs.map(d => d.data());
+    renderQuote();
+  });
+  setInterval(renderQuote, 10000);
 </script>
 
 </body>
