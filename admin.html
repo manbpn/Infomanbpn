@@ -152,7 +152,18 @@
   <div class="panel active" id="panelKonten">
     <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--ink-soft);">
       <b>Nama bilik menentukan posisi di layar TV</b> — beri nama PERSIS: <code>Layar Utama</code> (Slide besar tengah) dan <code>Agenda Hari Ini</code> (panel kanan atas). Bilik lain di luar 2 nama ini tidak akan tampil di layar utama.<br>
+      <b>Unggah file</b> memerlukan Firebase Storage (belum aktif). Selama belum aktif, isi kolom "Tautan URL" saja.<br>
       <b>Isi konten:</b> kolom "Tautan URL" boleh diisi tautan foto/video/YouTube, tautan halaman web (tampil sebagai HTML), atau kode HTML langsung (diawali tanda <code>&lt;</code>).
+    </div>
+    <div class="account-card">
+      <h3>Tambah Bilik</h3>
+      <div class="add-admin-form" style="grid-template-columns:1fr 2fr auto;">
+        <input type="text" id="newBilikName" placeholder="Nama bilik, mis. Layar Utama">
+        <input type="text" id="newBilikFungsi" placeholder="Keterangan singkat (opsional)">
+        <button class="btn-small" id="btnAddBilik">Tambah Bilik</button>
+      </div>
+      <p style="font-size:11.5px;color:var(--ink-soft);margin:10px 0 8px;">Desain baru butuh 2 bilik bernama persis <b>Layar Utama</b> dan <b>Agenda Hari Ini</b>.</p>
+      <button class="btn-small" id="btnQuickBilik">Buat Layar Utama &amp; Agenda Hari Ini</button>
     </div>
     <div id="bilikList"></div>
   </div>
@@ -317,7 +328,7 @@
       batch.set(ref2, b);
     });
     await batch.commit();
-    toast('6 bilik contoh berhasil dibuat.');
+    toast('2 bilik contoh berhasil dibuat.');
   }
 
   function renderBilikCard(id, bilik){
@@ -332,6 +343,8 @@
       '<div class="head-row">'+
         '<span class="badge '+bilik.type+'">'+bilik.type+'</span>'+
         '<h3>'+bilik.name+'</h3>'+
+        '<button class="icon-btn" data-rename="'+id+'">Ganti Nama</button>'+
+        '<button class="icon-btn danger" data-delbilik="'+id+'">Hapus Bilik</button>'+
       '</div>'+
       '<p class="fungsi-text">'+(bilik.fungsi||'')+'</p>'+
       '<ul class="item-list" id="items-'+id+'"><li>Memuat…</li></ul>'+
@@ -344,6 +357,8 @@
       '<div class="upload-progress" id="prog-'+id+'"></div>';
 
     card.querySelector('[data-add]').addEventListener('click', () => addItem(id, bilik.type));
+    card.querySelector('[data-rename]').addEventListener('click', () => renameBilik(id, bilik.name));
+    card.querySelector('[data-delbilik]').addEventListener('click', () => deleteBilik(id, bilik.name));
 
     onSnapshot(query(collection(db, 'biliks', id, 'items'), orderBy('addedAt','desc')), (itemsSnap) => {
       const ul = document.getElementById('items-'+id);
@@ -382,7 +397,10 @@
         progEl.style.display = 'block';
         progEl.textContent = 'Mengunggah berkas...';
         const storageRef = ref(storage, 'bilik-uploads/' + bilikId + '/' + Date.now() + '_' + file.name);
-        await uploadBytes(storageRef, file);
+        await Promise.race([
+          uploadBytes(storageRef, file),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('STORAGE_TIMEOUT')), 15000))
+        ]);
         url = await getDownloadURL(storageRef);
         progEl.textContent = 'Unggah selesai.';
         setTimeout(()=>{ progEl.style.display='none'; }, 1500);
@@ -394,10 +412,52 @@
       toast('Konten berhasil ditambahkan.');
     }catch(err){
       console.error(err);
-      progEl.style.display = 'none';
-      toast('Gagal menambah konten: ' + err.message);
+      if(err.message === 'STORAGE_TIMEOUT'){
+        progEl.style.display = 'block';
+        progEl.textContent = 'Unggah gagal: Firebase Storage belum aktif. Gunakan kolom Tautan URL.';
+        toast('Unggah file belum bisa dipakai. Isi kolom Tautan URL saja.');
+      }else{
+        progEl.style.display = 'none';
+        toast('Gagal menambah konten: ' + err.message);
+      }
     }
   }
+
+  /* ---------------- TAMBAH / GANTI NAMA / HAPUS BILIK ---------------- */
+  async function renameBilik(id, current){
+    const nama = prompt('Nama bilik baru:', current || '');
+    if(nama && nama.trim()){
+      await updateDoc(doc(db, 'biliks', id), { name: nama.trim() });
+      toast('Nama bilik diubah.');
+    }
+  }
+  async function deleteBilik(id, name){
+    if(!confirm('Hapus bilik "'+name+'" beserta seluruh kontennya?')) return;
+    const items = await getDocs(collection(db, 'biliks', id, 'items'));
+    for(const it of items.docs){ await deleteDoc(it.ref); }
+    await deleteDoc(doc(db, 'biliks', id));
+    toast('Bilik dihapus.');
+  }
+  $('#btnAddBilik').addEventListener('click', async () => {
+    const name = $('#newBilikName').value.trim();
+    if(!name){ toast('Isi nama bilik terlebih dahulu.'); return; }
+    try{
+      await addDoc(collection(db, 'biliks'), { name, fungsi: $('#newBilikFungsi').value.trim(), type:'gambar', order: Date.now() });
+      $('#newBilikName').value=''; $('#newBilikFungsi').value='';
+      toast('Bilik ditambahkan.');
+    }catch(err){ toast('Gagal menambah bilik: ' + err.message); }
+  });
+  $('#btnQuickBilik').addEventListener('click', async () => {
+    try{
+      const snap = await getDocs(collection(db, 'biliks'));
+      const names = snap.docs.map(d => (d.data().name||'').trim().toLowerCase());
+      let made = 0;
+      for(const b of DEFAULT_BILIKS){
+        if(!names.includes(b.name.toLowerCase())){ await addDoc(collection(db, 'biliks'), b); made++; }
+      }
+      toast(made ? made + ' bilik dibuat.' : 'Layar Utama & Agenda Hari Ini sudah ada.');
+    }catch(err){ toast('Gagal: ' + err.message); }
+  });
 
   /* ---------------- KELOLA AKUN ADMIN (khusus admin utama) ---------------- */
   async function loadAccounts(){
